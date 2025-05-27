@@ -16,4 +16,15 @@ CREATE TABLE POSTS
     member_id   BIGINT          NOT NULL COMMENT '유저 테이블',
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
-)
+);
+
+CREATE TABLE follows
+(
+     id          BIGINT  AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
+     follower_id BIGINT  NOT NULL COMMENT '팔로워 아이디',
+     followee_id BIGINT  NOT NULL COMMENT '팔로위 아이디',
+     UNIQUE (follower_id, followee_id),
+     FOREIGN KEY (follower_id) REFERENCES members(id),
+     FOREIGN KEY (followee_id) REFERENCES members(id),
+     CHECK ( follower_id <> followee_id )
+);
