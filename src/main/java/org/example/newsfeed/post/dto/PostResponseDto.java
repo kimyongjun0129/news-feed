@@ -19,9 +19,9 @@ public class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.memberId = 1L;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.memberId = post.getMemberId();
+        this.createdAt = post.getCreatedAt();
+        this.updatedAt = post.getUpdatedAt();
     }
 
     public PostResponseDto(Long id, String title, String content, Long memberId, LocalDateTime createdAt, LocalDateTime updatedAt) {
