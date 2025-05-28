@@ -1,11 +1,10 @@
 package org.example.newsfeed.comment.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeed.comment.dto.CommentCreateRequestDto;
+import org.example.newsfeed.comment.dto.CommentRequestDto;
 import org.example.newsfeed.comment.dto.CommentResponseDto;
 import org.example.newsfeed.comment.service.CommentService;
 import org.example.newsfeed.post.dto.PageDto;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @RequestBody CommentCreateRequestDto dto
+            @RequestBody CommentRequestDto dto
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         CommentResponseDto responseDto = commentService.createComment(
@@ -43,5 +42,31 @@ public class CommentController {
     ){
         Page<CommentResponseDto> responseDtoPage = commentService.findComments(postId, page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @RequestBody CommentRequestDto dto
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+    ){
+        CommentResponseDto responseDto = commentService.updateComment(
+                postId,
+                commentId,
+                dto.getContent(),
+                1L
+        );
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+    ){
+        commentService.deleteComment(postId, commentId, 1L);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

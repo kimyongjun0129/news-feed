@@ -3,10 +3,10 @@ package org.example.newsfeed.comment.dto;
 import lombok.Getter;
 
 @Getter
-public class CommentCreateRequestDto {
+public class CommentRequestDto {
     private final String content;
 
-    public CommentCreateRequestDto(String content) {
+    public CommentRequestDto(String content) {
         this.content = content;
     }
 }
