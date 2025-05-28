@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -35,9 +37,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostResponseDto> findPosts(int page, int size) {
+    public Page<PostResponseDto> findPosts(LocalDateTime from, LocalDateTime to, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<Post> postPage = postRepository.findAllByUpdatedAtBetween(from, to, pageable);
 
         return postPage.map(PostResponseDto::new);
     }
