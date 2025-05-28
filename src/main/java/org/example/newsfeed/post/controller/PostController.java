@@ -1,6 +1,5 @@
 package org.example.newsfeed.post.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.post.dto.PageDto;
 import org.example.newsfeed.post.dto.PostCreateRequestDto;

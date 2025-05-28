@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
@@ -45,8 +47,12 @@ public class PostServiceImpl implements PostService {
 
         checkPostMemberId(post, userId);
 
-        post.updateTitle(title);
-        post.updateContent(content);
+        if(title != null){
+            post.updateTitle(title);
+        }
+        if(content != null){
+            post.updateContent(content);
+        }
 
         return new PostResponseDto(post);
     }
@@ -57,6 +63,8 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findPostByIdOrElseThrow(id);
 
         checkPostMemberId(post, userId);
+
+        postRepository.delete(post);
     }
 
     // 적합한 exception 으로 변경하기

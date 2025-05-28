@@ -4,7 +4,6 @@ import org.example.newsfeed.post.dto.PostResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-@Service
 public interface PostService {
 
     PostResponseDto createPost(String title, String content);
