@@ -7,9 +7,12 @@ import org.example.newsfeed.post.dto.PostResponseDto;
 import org.example.newsfeed.post.dto.PostUpdateRequestDto;
 import org.example.newsfeed.post.service.PostService;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -40,11 +43,13 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<PageDto<PostResponseDto>> findPosts(
+            @RequestParam(defaultValue = "2025-05-28-00-00-00") @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")LocalDateTime from,
+            @RequestParam(defaultValue = "2025-05-30-23-59-59") @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")LocalDateTime to,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
-        Page<PostResponseDto> responseDtoPage = postService.findPosts(page, size);
+        Page<PostResponseDto> responseDtoPage = postService.findPosts(from, to, page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
     }
 
