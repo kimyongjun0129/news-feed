@@ -20,6 +20,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
             @RequestBody PostCreateRequestDto dto
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         PostResponseDto responseDto = postService.createPost(
                 dto.getTitle(),
@@ -28,27 +29,33 @@ public class PostController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id) {
-        return new ResponseEntity<>(postService.getPost(id), HttpStatus.OK);
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(
+            @PathVariable Long postId
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+    ) {
+
+        return new ResponseEntity<>(postService.getPost(postId), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<PageDto<PostResponseDto>> findPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         Page<PostResponseDto> responseDtoPage = postService.findPosts(page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @RequestBody PostUpdateRequestDto dto
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         PostResponseDto responseDto = postService.updatePost(
-                id,
+                postId,
                 dto.getTitle(),
                 dto.getContent(),
                 1L
@@ -56,9 +63,12 @@ public class PostController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id, 1L);
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId
+            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+    ) {
+        postService.deletePost(postId, 1L);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

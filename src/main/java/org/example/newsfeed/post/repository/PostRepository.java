@@ -1,5 +1,7 @@
 package org.example.newsfeed.post.repository;
 
+import org.example.newsfeed.common.exception.CustomException;
+import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,9 +12,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     default Post findPostByIdOrElseThrow(Long id){
         return findById(id)
                 .orElseThrow(() ->
-                        new NoSuchElementException(
-                                "Post not found with id " + id
-                        )
+                        new CustomException(CustomErrorCode.POST_NOT_FOUND)
                 );
     }
 }
