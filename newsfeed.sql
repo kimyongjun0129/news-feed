@@ -33,7 +33,7 @@ CREATE TABLE follows
 CREATE TABLE comments
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
-    comment     VARCHAR(255)    NOT NULL COMMENT '댓글 내용',
+    content     VARCHAR(255)    NOT NULL COMMENT '댓글 내용',
     member_id   BIGINT          NOT NULL COMMENT '유저 테이블',
     post_id     BIGINT          NOT NULL COMMENT '게시글 테이블',
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
