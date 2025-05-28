@@ -1,5 +1,6 @@
 package org.example.newsfeed.comment.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.comment.dto.CommentRequestDto;
 import org.example.newsfeed.comment.dto.CommentResponseDto;
@@ -22,7 +23,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @RequestBody CommentRequestDto dto
+            @Valid @RequestBody CommentRequestDto dto
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         CommentResponseDto responseDto = commentService.createComment(
@@ -48,7 +49,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @RequestBody CommentRequestDto dto
+            @Valid @RequestBody CommentRequestDto dto
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         CommentResponseDto responseDto = commentService.updateComment(

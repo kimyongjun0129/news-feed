@@ -12,7 +12,7 @@ CREATE TABLE POSTS
 (
     id          BIGINT  AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
     title       VARCHAR(20)     NOT NULL COMMENT '게시글 이름',
-    content     VARCHAR(255)    NOT NULL COMMENT '게시글 내용',
+    content     TEXT            NOT NULL COMMENT '게시글 내용',
     member_id   BIGINT          NOT NULL COMMENT '유저 테이블',
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',

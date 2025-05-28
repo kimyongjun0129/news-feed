@@ -1,5 +1,6 @@
 package org.example.newsfeed.post.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.post.dto.PageDto;
 import org.example.newsfeed.post.dto.PostCreateRequestDto;
@@ -22,7 +23,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
-            @RequestBody PostCreateRequestDto dto
+            @Valid @RequestBody PostCreateRequestDto dto
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         PostResponseDto responseDto = postService.createPost(
@@ -56,7 +57,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto dto
+            @Valid @RequestBody PostUpdateRequestDto dto
             //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         PostResponseDto responseDto = postService.updatePost(
