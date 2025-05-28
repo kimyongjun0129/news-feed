@@ -5,6 +5,8 @@ import org.example.newsfeed.follow.repository.FollowRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class FollowService {
 
@@ -20,5 +22,14 @@ public class FollowService {
         Follow follows = new Follow(2L, id);
 
         followRepository.save(follows);
+    }
+
+    @Transactional
+    public void unfollowUser(Long id) {
+
+        List<Follow> byFollowerId = followRepository.findByFolloweeId(id);
+        Follow follow = byFollowerId.get(0);
+
+        followRepository.delete(follow);
     }
 }
