@@ -3,6 +3,7 @@ package org.example.newsfeed.member.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.newsfeed.common.entity.BaseEntity;
 
 @Getter
@@ -18,6 +19,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_name", nullable = false)
     private String memberName;
 
+    @Setter
     @Column(nullable = false, unique = true)
     private String email;
 
