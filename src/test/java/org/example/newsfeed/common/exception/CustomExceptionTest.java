@@ -10,9 +10,9 @@ public class CustomExceptionTest {
 
     @Test
     void testCustomException(){
-        CustomException e = new CustomException(CustomErrorCode.EMAIL_INVALID_FORMAT);
+        CustomException e = new CustomException(CustomErrorCode.INVALID_DATE_FORMAT);
 
-        Assertions.assertEquals(CustomErrorCode.EMAIL_INVALID_FORMAT, e.getErrorCode());
-        Assertions.assertEquals("이메일 형식이 잘못되었습니다.", e.getMessage());
+        Assertions.assertEquals(CustomErrorCode.INVALID_DATE_FORMAT, e.getErrorCode());
+        Assertions.assertEquals("날짜 형식이 잘못되었습니다.", e.getMessage());
     }
 }
