@@ -30,7 +30,7 @@ public enum CustomErrorCode {
     INVALID_COMMENT_UPDATE(HttpStatus.BAD_REQUEST, "댓글 내용만 수정할 수 있습니다."), // (댓글 수정) 내용 외의 필드를 수정하려고 할 때
 
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 찾을 수 없습니다."), // (좋아요) 저장된 좋아요 없음
-    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 좋아요 한 게시물입니다."), // (좋아요 추가) 이미 좋아요 한 게시물
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 좋아요 했습니다."), // (좋아요 추가) 이미 좋아요 한 게시물, 댓글
     CANNOT_LIKE_OWN_POST(HttpStatus.BAD_REQUEST, "본인이 작성한 게시물을 좋아요 할 수 없습니다."), // (좋아요 추가) 본인이 작성한 게시물에 좋아요
     CANNOT_LIKE_OWN_COMMENT(HttpStatus.BAD_REQUEST, "본인이 작성한 댓글을 좋아요 할 수 없습니다."); // (좋아요 추가) 본인이 작성한 댓글에 좋아요
 

@@ -6,8 +6,8 @@ import org.example.newsfeed.common.entity.BaseEntity;
 
 @Getter
 @Entity
-@Table(name = "posts_likes")
-public class Like extends BaseEntity {
+@Table(name = "comments_likes")
+public class CommentLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,12 +17,12 @@ public class Like extends BaseEntity {
     private Long memberId;
 
     @Column
-    private Long postId;
+    private Long commentId;
 
-    public Like(){}
-    public Like(Long memberId, Long postId){
+    public CommentLike(){}
+    public CommentLike(Long memberId, Long commentId){
         this.memberId = memberId;
-        this.postId = postId;
+        this.commentId = commentId;
     }
 }
 

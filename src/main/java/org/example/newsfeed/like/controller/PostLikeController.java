@@ -1,10 +1,9 @@
 package org.example.newsfeed.like.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeed.like.dto.LikeCountResponseDto;
 import org.example.newsfeed.like.dto.LikeRequestDto;
 import org.example.newsfeed.like.dto.LikeResponseDto;
-import org.example.newsfeed.like.dto.PostLikesResponseDto;
+import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.like.service.LikeService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-public class LikeController {
+public class PostLikeController {
 
     private final LikeService likeService;
     private final LikeRepository likeRepository;
@@ -51,17 +50,17 @@ public class LikeController {
      * @return
      */
     @GetMapping("/api/posts/{postId}/likes")
-    public ResponseEntity<PostLikesResponseDto> countByPostId(
+    public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
             @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
             @PathVariable Long postId){
 
-        PostLikesResponseDto postLikesResponseDto = likeService.findByPostId(requestDto.getMemberId(), postId);
+        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(requestDto.getMemberId(), postId);
 
         return new ResponseEntity<>(postLikesResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/api/members/{memberId}/likes")
-    public ResponseEntity<List<LikeResponseDto>> findBymemberId(@PathVariable Long memberId){
+    public ResponseEntity<List<LikeResponseDto>> findByMemberId(@PathVariable Long memberId){
 
         List<LikeResponseDto> likeResponseDtoList =
                 likeService.findByMemberId(memberId);

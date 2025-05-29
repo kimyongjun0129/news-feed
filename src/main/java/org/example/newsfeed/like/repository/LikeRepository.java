@@ -11,9 +11,10 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     List<Like> findByMemberId(Long memberId);
-    List<Like> findByPostId(Long postId);
+    List<Long> findMemberIdByPostId(Long postId);
     Optional<Like> findByMemberIdAndPostId(Long memberId, Long postId);
-    int countByPostId(Long postId);
+    Long countByPostId(Long postId);
+    boolean existsByMemberIdAndPostId(Long memberId, Long postId);
 
     default Like findByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(()

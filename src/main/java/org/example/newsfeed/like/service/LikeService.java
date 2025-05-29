@@ -3,8 +3,8 @@ package org.example.newsfeed.like.service;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
-import org.example.newsfeed.like.dto.LikeCountResponseDto;
 import org.example.newsfeed.like.dto.LikeResponseDto;
+import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.entity.Like;
 import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.post.entity.Post;
@@ -48,11 +48,14 @@ public class LikeService {
         likeRepository.delete(like);
     }
 
-    public List<LikeResponseDto> findByPostId(Long postId){
-        return likeRepository.findByPostId(postId)
-                .stream()
-                .map(LikeResponseDto::toDto)
-                .toList();
+    public PostOrCommentLikesResponseDto findByPostId(Long memberId, Long postId){
+
+        List<Long> memberIds = likeRepository.findMemberIdByPostId(postId);
+        Long countLikes = likeRepository.countByPostId(postId);
+        boolean likedByMe = likeRepository.existsByMemberIdAndPostId(memberId, postId);
+
+        return new PostOrCommentLikesResponseDto(memberIds, countLikes, likedByMe);
+
     }
 
     public List<LikeResponseDto> findByMemberId(Long memberId){
@@ -61,15 +64,15 @@ public class LikeService {
                 .map(LikeResponseDto::toDto)
                 .toList();
     }
-
-    /**
-     * 게시물의 좋아요 수 반환
-     * @param postId
-     * @return
-     */
-    public LikeCountResponseDto countByPostId(Long postId){
-        return new LikeCountResponseDto(postId, likeRepository.countByPostId(postId));
-    }
+//
+//    /**
+//     * 게시물의 좋아요 수 반환
+//     * @param postId
+//     * @return
+//     */
+//    public LikeCountResponseDto countByPostId(Long postId){
+//        return new LikeCountResponseDto(postId, likeRepository.countByPostId(postId));
+//    }
 
 
 }
