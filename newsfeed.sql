@@ -42,7 +42,7 @@ CREATE TABLE comments
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-CREATE TABLE likes
+CREATE TABLE posts_likes
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
     member_id   BIGINT          NOT NULL COMMENT '유저 테이블',
@@ -51,4 +51,15 @@ CREATE TABLE likes
     updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     FOREIGN KEY (member_id) REFERENCES members(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
+);
+
+CREATE TABLE comments_likes
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
+    member_id   BIGINT          NOT NULL COMMENT '유저 테이블',
+    comment_id     BIGINT          NOT NULL COMMENT '댓글 테이블',
+    created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    FOREIGN KEY (member_id) REFERENCES members(id),
+    FOREIGN KEY (comment_id) REFERENCES comments(id)
 );
