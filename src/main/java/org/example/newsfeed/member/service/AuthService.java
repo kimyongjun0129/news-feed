@@ -8,6 +8,7 @@ import org.example.newsfeed.common.constant.PasswordFormatConstant;
 import org.example.newsfeed.common.constant.SessionConstant;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
+import org.example.newsfeed.common.filter.JwtUtil;
 import org.example.newsfeed.common.security.PasswordEncoder;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.entity.Member;
@@ -25,6 +26,7 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public void signup(MemberSignupRequestDto requestDto) {
         String email = requestDto.getEmail();
@@ -77,7 +79,7 @@ public class AuthService {
         memberRepository.delete(member);
     }
 
-    public void login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
+    public String login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
 
         // 이메일 형식 검증
         if (!EMAIL_REGEX.matcher(requestDto.getEmail()).matches()) {
@@ -97,8 +99,7 @@ public class AuthService {
         }
 
         // 세션 설정
-        HttpSession session = httpServletRequest.getSession();
-        session.setAttribute(SessionConstant.MEMBER, member.getId());
+        return jwtUtil.generateToken(member.getId());
     }
 
     public void logout(HttpServletRequest httpServletRequest) {

@@ -20,13 +20,13 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @Valid @RequestBody CommentRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody CommentRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         CommentResponseDto responseDto = commentService.createComment(
                 postId,
                 dto.getContent(),
-                1L
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -36,7 +36,6 @@ public class CommentController {
             @PathVariable Long postId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "30") int size
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         Page<CommentResponseDto> responseDtoPage = commentService.findComments(postId, page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
@@ -46,14 +45,14 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @Valid @RequestBody CommentRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody CommentRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         CommentResponseDto responseDto = commentService.updateComment(
                 postId,
                 commentId,
                 dto.getContent(),
-                1L
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -61,10 +60,10 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,
-            @PathVariable Long commentId
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @PathVariable Long commentId,
+            @RequestAttribute("memberId") Long memberId
     ){
-        commentService.deleteComment(postId, commentId, 1L);
+        commentService.deleteComment(postId, commentId, memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

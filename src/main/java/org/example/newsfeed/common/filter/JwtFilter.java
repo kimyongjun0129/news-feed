@@ -1,16 +1,23 @@
 package org.example.newsfeed.common.filter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.constant.SessionConstant;
 import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
-import javax.security.sasl.AuthenticationException;
+
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtFilter implements Filter {
-    private static final String[] WHITE_LIST = {"/api/signup", "/api/users/login", "/api/users/*/profile"};
+    private final JwtUtil jwtUtil;
+
+    private static final String[] WHITE_LIST = {"/api/auth/signup", "/api/auth/login", "/api/auth/*/profile"};
 
     @Override
     public void doFilter(
@@ -23,20 +30,33 @@ public class JwtFilter implements Filter {
 
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        String authorizationHeader = httpServletRequest.getHeader("Authorization");
+        String authorizationHeader = httpServletRequest.getHeader(SessionConstant.TOKEN);
 
-        if(!isWhiteList(requestURI)) {
-            if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
-            {
-                throw new AuthenticationException("유효한 JWT 가지고 있지 않음");
+        // 화이트리스트 검증
+        if (!isWhiteList(requestURI)) {
+            // 토큰 유효성 확인
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                throw new ServletException("유효한 JWT 가지고 있지 않음");
             }
+
+            // 토큰 서명 유효성, 만료 여부 확인
+            String token = authorizationHeader.substring(7);
+            Claims claims = null;
+            try {
+                claims = jwtUtil.validateAndParse(token);
+            } catch (JwtException e) {
+                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpServletResponse.getWriter().write("Invalid JWT: " + e.getMessage());
+            }
+
+            // request 에 memberId 삽입
+            Long memberId = jwtUtil.getMemberId(token);
+            httpServletRequest.setAttribute("memberId", memberId);
         }
-        // 아래는 서명, 만료 검증부분, gradle 에 dependency 추가하면 주석 해제
-        String token = authorizationHeader.replace("Bearer ", "");
-        // Claims claims = jwtUtil.validateAndParse(token);
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
     private boolean isWhiteList(String requestURI) {
         return PatternMatchUtils.simpleMatch(WHITE_LIST, requestURI);
     }

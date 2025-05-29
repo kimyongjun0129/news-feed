@@ -12,7 +12,6 @@ import org.springframework.util.PatternMatchUtils;
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 
-@Component
 public class LoginFilter implements Filter {
 
     private static final String[] WHITE_LIST = {"/api/auth/signup", "/api/auth/login", "/api/users/*/profile"};
