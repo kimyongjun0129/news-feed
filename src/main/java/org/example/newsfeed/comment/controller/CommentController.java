@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    // 인증 필요할 때 붙여넣기용
-    //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
-
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
