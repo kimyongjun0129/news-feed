@@ -101,12 +101,4 @@ public class AuthService {
         // 세션 설정
         return jwtUtil.generateToken(member.getId());
     }
-
-    public void logout(HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession(false);
-
-        if (session != null) {
-            session.invalidate();
-        }
-    }
 }

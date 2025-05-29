@@ -52,9 +52,16 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            HttpServletRequest httpServletRequest
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
     ) {
-        authorService.logout(httpServletRequest);
+        Cookie cookie = new Cookie(SessionConstant.TOKEN, null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        httpServletResponse.addCookie(cookie);
+        
         return ResponseEntity.ok("로그아웃 완료");
     }
 }
