@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.like.dto.LikeCountResponseDto;
 import org.example.newsfeed.like.dto.LikeRequestDto;
 import org.example.newsfeed.like.dto.LikeResponseDto;
+import org.example.newsfeed.like.dto.PostLikesResponseDto;
 import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.like.service.LikeService;
 import org.springframework.http.HttpStatus;
@@ -38,11 +39,25 @@ public class LikeController {
         likeService.unlike(requestDto.getMemberId(), postId);
     }
 
+    /**
+     * postId/likes get 매핑 시
+     * 게시물을 좋아요 한 memberId 리스트,
+     * 게시물 좋아요 개수,
+     * 로그인한 사용자가 좋아요 했는지
+     * PostLikesResponseDto 에 넣어 반환
+     *
+     * @param requestDto
+     * @param postId
+     * @return
+     */
     @GetMapping("/api/posts/{postId}/likes")
-    public ResponseEntity<LikeCountResponseDto> countByPostId(@PathVariable Long postId){
+    public ResponseEntity<PostLikesResponseDto> countByPostId(
+            @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @PathVariable Long postId){
 
-        LikeCountResponseDto likeCountResponseDto = likeService.countByPostId(postId);
-        return new ResponseEntity<LikeCountResponseDto>(likeCountResponseDto, HttpStatus.OK);
+        PostLikesResponseDto postLikesResponseDto = likeService.findByPostId(requestDto.getMemberId(), postId);
+
+        return new ResponseEntity<>(postLikesResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/api/members/{memberId}/likes")
