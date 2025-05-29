@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class FindProfileResponseDto {
-    //프로필 조회
+
 
     private final String memberName;
     private final String email;
