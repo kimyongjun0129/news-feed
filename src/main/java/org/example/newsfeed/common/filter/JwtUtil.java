@@ -39,8 +39,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Long getMemberId(String token) {
-        Claims claims = validateAndParse(token);
+    public Long getMemberId(Claims claims) {
         return claims.get("memberId", Long.class);
     }
 }

@@ -50,8 +50,10 @@ public class JwtFilter implements Filter {
             }
 
             // request 에 memberId 삽입
-            Long memberId = jwtUtil.getMemberId(token);
-            httpServletRequest.setAttribute("memberId", memberId);
+            if (claims != null) {
+                Long memberId = jwtUtil.getMemberId(claims);
+                httpServletRequest.setAttribute("memberId", memberId);
+            }
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
