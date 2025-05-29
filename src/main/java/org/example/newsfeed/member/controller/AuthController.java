@@ -30,12 +30,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<String> login(
             @RequestBody LoginRequestDto loginRequestDto,
             HttpServletRequest httpServletRequest
     ) {
-        LoginResponseDto loginResponseDto = authorService.login(loginRequestDto, httpServletRequest);
-        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+        authorService.login(loginRequestDto, httpServletRequest);
+        return ResponseEntity.ok("로그인 완료");
     }
 
     @PostMapping("/logout")

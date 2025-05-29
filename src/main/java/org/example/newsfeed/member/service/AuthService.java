@@ -77,7 +77,7 @@ public class AuthService {
         memberRepository.delete(member);
     }
 
-    public LoginResponseDto login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
+    public void login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
 
         // 이메일 형식 검증
         if (!EMAIL_REGEX.matcher(requestDto.getEmail()).matches()) {
@@ -99,13 +99,6 @@ public class AuthService {
         // 세션 설정
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(SessionConstant.MEMBER, member.getId());
-
-        return LoginResponseDto.builder()
-                .message("로그인 성공")
-                .status(HttpStatus.OK.value())
-                .memberId(member.getId())
-                .memberName(member.getMemberName())
-                .build();
     }
 
     public void logout(HttpServletRequest httpServletRequest) {
