@@ -1,4 +1,4 @@
-package org.example.newsfeed.post.entity;
+package org.example.newsfeed.comment.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,35 +8,30 @@ import org.example.newsfeed.common.entity.BaseEntity;
 
 @Getter
 @Entity
-@Table(name = "posts")
-public class Post extends BaseEntity {
+@Table(name = "comments")
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter
-    @Column(length = 20)
-    @NotNull
-    private String title;
-
-    @Setter
-    // 아마도 content 크기 늘어날 예정, DB와 length 값 수정해줄것
     @Column(length = 255)
     @NotNull
     private String content;
 
+    @Setter
     private Long memberId;
 
-    public Post() {}
-    public Post(String title, String content, Long memberId){
-        this.title = title;
+    @Setter
+    private Long postId;
+
+    public Comment() {}
+    public Comment(String content, Long memberId, Long postId) {
         this.content = content;
         this.memberId = memberId;
+        this.postId = postId;
     }
 
-    public void updateTitle(String title) {
-        this.title = title;
-    }
     public void updateContent(String content) {
         this.content = content;
     }
