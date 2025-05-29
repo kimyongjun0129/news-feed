@@ -1,10 +1,7 @@
 package org.example.newsfeed.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.newsfeed.member.dto.LoginRequestDto;
-import org.example.newsfeed.member.dto.LoginResponseDto;
-import org.example.newsfeed.member.dto.MemberDeleteRequestDto;
-import org.example.newsfeed.member.dto.MemberSignupRequestDto;
+import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +30,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<String> login(
             @RequestBody LoginRequestDto loginRequestDto,
             HttpServletRequest httpServletRequest
     ) {
-        LoginResponseDto loginResponseDto = authorService.login(loginRequestDto, httpServletRequest);
-        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+        authorService.login(loginRequestDto, httpServletRequest);
+        return ResponseEntity.ok("로그인 완료");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            HttpServletRequest httpServletRequest
+    ) {
+        authorService.logout(httpServletRequest);
+        return ResponseEntity.ok("로그아웃 완료");
     }
 }

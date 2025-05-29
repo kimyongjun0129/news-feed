@@ -1,5 +1,6 @@
 package org.example.newsfeed.member.service;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +9,7 @@ import org.example.newsfeed.common.constant.SessionConstant;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.common.security.PasswordEncoder;
-import org.example.newsfeed.member.dto.LoginRequestDto;
-import org.example.newsfeed.member.dto.LoginResponseDto;
-import org.example.newsfeed.member.dto.MemberDeleteRequestDto;
-import org.example.newsfeed.member.dto.MemberSignupRequestDto;
+import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
 import org.springframework.http.HttpStatus;
@@ -79,7 +77,7 @@ public class AuthService {
         memberRepository.delete(member);
     }
 
-    public LoginResponseDto login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
+    public void login(LoginRequestDto requestDto, HttpServletRequest httpServletRequest) {
 
         // 이메일 형식 검증
         if (!EMAIL_REGEX.matcher(requestDto.getEmail()).matches()) {
@@ -101,12 +99,13 @@ public class AuthService {
         // 세션 설정
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(SessionConstant.MEMBER, member.getId());
+    }
 
-        return LoginResponseDto.builder()
-                .message("로그인 성공")
-                .status(HttpStatus.OK.value())
-                .memberId(member.getId())
-                .memberName(member.getMemberName())
-                .build();
+    public void logout(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
     }
 }
