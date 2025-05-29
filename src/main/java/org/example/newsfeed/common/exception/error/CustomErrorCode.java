@@ -11,6 +11,7 @@ public enum CustomErrorCode {
     USERNAME_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "유저네임 형식이 잘못되었습니다."), // (회원가입, 로그인) 유저네임 형식 틀림
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 이메일입니다."), // (로그인) 저장된 이메일 없음
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 잘못되었습니다."), // (로그인, 비번 변경) 비밀번호 틀림
+    NEW_PASSWORD_SAME_AS_OLD(HttpStatus.CONFLICT, "현재 비밀번호와 다른 비밀번호를 사용해야합니다."), // (비번 변경) 전 비밀번호랑 같은 비밀번호 입력
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."), // (로그인) 로그인 필요 서비스에 로그인 안하고 접근
 
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 가입된 이메일입니다."), // (회원가입) 이메일 중복
@@ -29,7 +30,7 @@ public enum CustomErrorCode {
     INVALID_COMMENT_UPDATE(HttpStatus.BAD_REQUEST, "댓글 내용만 수정할 수 있습니다."), // (댓글 수정) 내용 외의 필드를 수정하려고 할 때
 
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 찾을 수 없습니다."), // (좋아요) 저장된 좋아요 없음
-    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 좋아요 한 게시물입니다."), // (좋아요 추가) 이미 좋아요 한 게시물
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 좋아요 했습니다."), // (좋아요 추가) 이미 좋아요 한 게시물, 댓글
     CANNOT_LIKE_OWN_POST(HttpStatus.BAD_REQUEST, "본인이 작성한 게시물을 좋아요 할 수 없습니다."), // (좋아요 추가) 본인이 작성한 게시물에 좋아요
     CANNOT_LIKE_OWN_COMMENT(HttpStatus.BAD_REQUEST, "본인이 작성한 댓글을 좋아요 할 수 없습니다."); // (좋아요 추가) 본인이 작성한 댓글에 좋아요
 

@@ -1,5 +1,7 @@
 package org.example.newsfeed.post.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.post.dto.PageDto;
 import org.example.newsfeed.post.dto.PostCreateRequestDto;
@@ -22,12 +24,13 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
-            @RequestBody PostCreateRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody PostCreateRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         PostResponseDto responseDto = postService.createPost(
                 dto.getTitle(),
-                dto.getContent()
+                dto.getContent(),
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -35,9 +38,7 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(
             @PathVariable Long postId
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ) {
-
         return new ResponseEntity<>(postService.getPost(postId), HttpStatus.OK);
     }
 
@@ -47,7 +48,6 @@ public class PostController {
             @RequestParam(defaultValue = "2025-05-30-23-59-59") @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")LocalDateTime to,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         Page<PostResponseDto> responseDtoPage = postService.findPosts(from, to, page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
@@ -56,24 +56,24 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody PostUpdateRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         PostResponseDto responseDto = postService.updatePost(
                 postId,
                 dto.getTitle(),
                 dto.getContent(),
-                1L
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
-            @PathVariable Long postId
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @PathVariable Long postId,
+            @RequestAttribute("memberId") Long memberId
     ) {
-        postService.deletePost(postId, 1L);
+        postService.deletePost(postId, memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

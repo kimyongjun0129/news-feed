@@ -1,6 +1,9 @@
 package org.example.newsfeed.member.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.example.newsfeed.common.constant.SessionConstant;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -32,17 +35,33 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(
             @RequestBody LoginRequestDto loginRequestDto,
-            HttpServletRequest httpServletRequest
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
     ) {
-        authorService.login(loginRequestDto, httpServletRequest);
-        return ResponseEntity.ok("로그인 완료");
+        String token = authorService.login(loginRequestDto, httpServletRequest);
+
+        Cookie cookie = new Cookie(SessionConstant.TOKEN, token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+
+        httpServletResponse.addCookie(cookie);
+
+        return ResponseEntity.ok("로그인 성공");
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            HttpServletRequest httpServletRequest
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
     ) {
-        authorService.logout(httpServletRequest);
+        Cookie cookie = new Cookie(SessionConstant.TOKEN, null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        httpServletResponse.addCookie(cookie);
+        
         return ResponseEntity.ok("로그아웃 완료");
     }
 }

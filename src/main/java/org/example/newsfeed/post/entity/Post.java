@@ -20,8 +20,7 @@ public class Post extends BaseEntity {
     private String title;
 
     @Setter
-    // 아마도 content 크기 늘어날 예정, DB와 length 값 수정해줄것
-    @Column(length = 255)
+    @Column(columnDefinition = "TEXT")
     @NotNull
     private String content;
 

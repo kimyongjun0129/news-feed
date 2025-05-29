@@ -1,5 +1,6 @@
 package org.example.newsfeed.comment.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.comment.dto.CommentRequestDto;
 import org.example.newsfeed.comment.dto.CommentResponseDto;
@@ -16,19 +17,16 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    // 인증 필요할 때 붙여넣기용
-    //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
-
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @RequestBody CommentRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody CommentRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         CommentResponseDto responseDto = commentService.createComment(
                 postId,
                 dto.getContent(),
-                1L
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -38,7 +36,6 @@ public class CommentController {
             @PathVariable Long postId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "30") int size
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
     ){
         Page<CommentResponseDto> responseDtoPage = commentService.findComments(postId, page, size);
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
@@ -48,14 +45,14 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @RequestBody CommentRequestDto dto
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @Valid @RequestBody CommentRequestDto dto,
+            @RequestAttribute("memberId") Long memberId
     ){
         CommentResponseDto responseDto = commentService.updateComment(
                 postId,
                 commentId,
                 dto.getContent(),
-                1L
+                memberId
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -63,10 +60,10 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,
-            @PathVariable Long commentId
-            //,@SessionAttribute(Const.LOGIN_USER) UserResponseDto user
+            @PathVariable Long commentId,
+            @RequestAttribute("memberId") Long memberId
     ){
-        commentService.deleteComment(postId, commentId, 1L);
+        commentService.deleteComment(postId, commentId, memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public interface PostService {
 
-    PostResponseDto createPost(String title, String content);
+    PostResponseDto createPost(String title, String content, Long memberId);
 
     PostResponseDto getPost(Long id);
 

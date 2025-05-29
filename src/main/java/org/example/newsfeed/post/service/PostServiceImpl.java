@@ -21,9 +21,9 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
     @Override
-    public PostResponseDto createPost(String title, String content) {
+    public PostResponseDto createPost(String title, String content, Long memberId) {
 
-        Post post = new Post(title, content, 1L);
+        Post post = new Post(title, content, memberId);
 
         Post savedPost = postRepository.save(post);
 
