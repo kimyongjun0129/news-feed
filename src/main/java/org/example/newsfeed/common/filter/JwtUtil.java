@@ -18,6 +18,7 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+    // 토큰 검증하면서 Payload(Body) 부분 꺼내오기
     public Claims validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -28,8 +29,9 @@ public class JwtUtil {
 
     public String generateToken(Long memberId) {
         Date now = new Date();
-        Date expireyDate = new Date(now.getTime() + 60 * 60 * 1000);
+        Date expireyDate = new Date(now.getTime() + 60 * 60 * 1000); // 만료 1시간
 
+        // 클레임(유저 정보)에 memberId 를 포함한 토큰 생성
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId))
                 .claim("memberId", memberId)
