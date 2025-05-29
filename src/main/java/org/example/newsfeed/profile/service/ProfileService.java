@@ -24,16 +24,5 @@ public class ProfileService {
     }
 
 
-    @Transactional
-    public UpdateProfileResponseDto updateprofile(Long id, UpdateProfileRequestDto requestDto) {
-        Member updateProfile = profileRepository.findByIdOrElseThrow(id);
-        //비밀번호 같은 경우 변경 불가능
-        if (!requestDto.getPassword().equals(updateProfile.getPassword())) {
-            throw new IllegalArgumentException("비밀번호를 변경할 수 없습니다.");
-        }
-        //신원확인을 위해 현재 비밀번호 입력후 맞으면 변경 가능.
-        return new UpdateProfileResponseDto();
 
-
-    }
 }
