@@ -1,34 +1,45 @@
 package org.example.newsfeed.follow.service;
 
+import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.exception.CustomException;
+import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.follow.entity.Follow;
 import org.example.newsfeed.follow.repository.FollowRepository;
+import org.example.newsfeed.member.entity.Member;
+import org.example.newsfeed.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class FollowService {
 
     private final FollowRepository followRepository;
-
-    public FollowService(FollowRepository followRepository) {
-        this.followRepository = followRepository;
-    }
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public void followUser(Long id) {
+    public void followUser(Long followeeId, Long followerId) {
 
-        Follow follows = new Follow(2L, id);
+        if(followerId.equals(followeeId)) {
+            throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+        }
+
+        Member followee = memberRepository.findMemberByIdOrElseThrow(followeeId);
+        Member follower = memberRepository.findMemberByIdOrElseThrow(followerId);
+
+        if(followRepository.findFollowByFolloweeAndFollower(followee, follower).isPresent()) {
+            throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+        }
+
+        Follow follows = new Follow(followee, follower);
 
         followRepository.save(follows);
     }
 
     @Transactional
-    public void unfollowUser(Long id) {
+    public void unfollowUser(Long followerId) {
 
-        List<Follow> byFollowerId = followRepository.findByFolloweeId(id);
-        Follow follow = byFollowerId.get(0);
+        Follow follow = followRepository.findFollowByIdOrElseThrow(followerId);
 
         followRepository.delete(follow);
     }
