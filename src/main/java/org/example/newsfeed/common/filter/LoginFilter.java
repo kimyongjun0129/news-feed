@@ -15,7 +15,7 @@ import java.io.IOException;
 @Component
 public class LoginFilter implements Filter {
 
-    private static final String[] WHITE_LIST = {"/api/signup", "/api/users/login", "/api/users/*/profile"};
+    private static final String[] WHITE_LIST = {"/api/auth/signup", "/api/auth/login", "/api/users/*/profile"};
 
     @Override
     public void doFilter(
