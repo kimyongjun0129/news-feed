@@ -1,6 +1,7 @@
 package org.example.newsfeed.follow.entity;
 
 import jakarta.persistence.*;
+import org.example.newsfeed.member.entity.Member;
 
 @Entity
 @Table(name = "follows")
@@ -9,15 +10,17 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "follower_id", nullable = false)
-    private Long followerId;
+    @ManyToOne
+    @JoinColumn(name = "followee_id", nullable = false)
+    private Member followee;
 
-    @Column(name = "followee_id", nullable = false)
-    private Long followeeId;
+    @ManyToOne
+    @JoinColumn(name = "follower_id", nullable = false)
+    private Member follower;
 
-    public Follow(Long followerId, Long followeeId) {
-        this.followerId = followerId;
-        this.followeeId = followeeId;
+    public Follow( Member followee, Member follower) {
+        this.followee = followee;
+        this.follower = follower;
     }
 
     public Follow() {

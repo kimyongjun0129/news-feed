@@ -12,7 +12,6 @@ import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
 
-@Component
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
     private final JwtUtil jwtUtil;
