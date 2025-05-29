@@ -3,13 +3,12 @@ package org.example.newsfeed.member.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.newsfeed.member.dto.LoginRequestDto;
 import org.example.newsfeed.member.dto.LoginResponseDto;
+import org.example.newsfeed.member.dto.MemberDeleteRequestDto;
+import org.example.newsfeed.member.dto.MemberSignupRequestDto;
 import org.example.newsfeed.member.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users/")
@@ -19,6 +18,18 @@ public class AuthController {
 
     public AuthController(AuthService authorService) {
         this.authorService = authorService;
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody MemberSignupRequestDto requestDto) {
+        authorService.signup(requestDto);
+        return ResponseEntity.ok("회원가입 성공");
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestBody MemberDeleteRequestDto requestDto) {
+        authorService.delete(requestDto);
+        return ResponseEntity.ok("회원탈퇴 완료");
     }
 
     @PostMapping("/login")
