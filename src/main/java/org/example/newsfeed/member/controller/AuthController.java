@@ -43,6 +43,6 @@ public class AuthController {
             HttpServletRequest httpServletRequest
     ) {
         authorService.logout(httpServletRequest);
-        return ResponseEntity.ok("로그아웃 성공");
+        return ResponseEntity.ok("로그아웃 완료");
     }
 }
