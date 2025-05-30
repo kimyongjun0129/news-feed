@@ -33,10 +33,14 @@ public class Post extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public void updateTitle(String title) {
+    public int updateTitle(String title) {
+        if(this.title.equals(title)) return 0;
         this.title = title;
+        return 1;
     }
-    public void updateContent(String content) {
+    public int updateContent(String content) {
+        if(this.content.equals(content)) return 0;
         this.content = content;
+        return 1;
     }
 }
