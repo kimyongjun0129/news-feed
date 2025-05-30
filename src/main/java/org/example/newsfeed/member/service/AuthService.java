@@ -1,5 +1,6 @@
 package org.example.newsfeed.member.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.constant.PasswordFormatConstant;
 import org.example.newsfeed.common.exception.CustomException;
@@ -37,6 +38,11 @@ public class AuthService {
             throw new CustomException(CustomErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
+        // 삭제됐던 이메일일 경우
+        if (memberRepository.existsByEmail("[DELETED]_" + email)) {
+            throw new CustomException(CustomErrorCode.DELETED_ACCOUNT);
+        }
+
         // 암호화 및 회원 저장
         String hashedPassword = passwordEncoder.encode(password);
         Member member = new Member(memberName, email, hashedPassword);
@@ -45,16 +51,17 @@ public class AuthService {
         return new AuthResponseDto(savedMember);
     }
 
-    public void delete(String email, String password) {
+    @Transactional
+    public void delete(String email, String password, Long memberId) {
         // MEMBER_NOT_FOUND 예외 없이 처리
         Member member = memberRepository.findByEmail(email).orElse(null);
         if (member == null) {
             throw new CustomException(CustomErrorCode.EMAIL_NOT_FOUND); // 조용히 종료하거나 무시 처리
         }
 
-        // 이미 탈퇴한 사용자 이메일인 경우
-        if (member.getEmail().startsWith("[DELETED]_")) {
-            throw new CustomException(CustomErrorCode.DELETED_ACCOUNT);
+        // 본인 이메일인지 확인, 메세지 본인이 아닙니다로 바꾸기 희망
+        if(!member.getId().equals(memberId)) {
+            throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION);
         }
 
         // 사용자 아이디와 비밀번호가 일치하지 않는 경우
@@ -63,8 +70,8 @@ public class AuthService {
         }
 
         // 이메일 재사용 방지
-        member.setEmail("[DELETED]_" + member.getEmail());
-        memberRepository.save(member);
+        Member deletedMember = new Member(member.getMemberName(), "[DELETED]_" + member.getEmail(), member.getPassword());
+        memberRepository.save(deletedMember);
 
         // 실제 삭제
         memberRepository.delete(member);

@@ -35,17 +35,20 @@ public class JwtFilter implements Filter {
         if (!isWhiteList(requestURI)) {
             // 토큰 유효성 확인
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                throw new ServletException("유효한 JWT 가지고 있지 않음");
+                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpServletResponse.getWriter().write("Invalid JWT token");
+                return;
             }
 
             // 토큰 서명 유효성, 만료 여부 확인
             String token = authorizationHeader.substring(7);
-            Claims claims = null;
+            Claims claims;
             try {
                 claims = jwtUtil.validateAndParse(token);
             } catch (JwtException e) {
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpServletResponse.getWriter().write("Invalid JWT: " + e.getMessage());
+                return;
             }
 
             // request 에 memberId 삽입
