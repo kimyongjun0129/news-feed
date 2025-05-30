@@ -20,22 +20,22 @@ public class CommentLikeController {
     private final CommentLikeService commentLikeService;
     private final CommentLikeRepository commentLikeRepository;
 
-    @PostMapping("/api/comments/{commentId}/likes")
+    @PostMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> like(
-            @RequestBody CommentLikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long commentId){
 
-        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(requestDto.getMemberId(), commentId);
+        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(memberId, commentId);
 
         return new ResponseEntity<>(commentLikeResponseDto,HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/api/comments/{commentId}/likes")
+    @DeleteMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public void unlike(
-            @RequestBody CommentLikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long commentId){
 
-        commentLikeService.unlike(requestDto.getMemberId(), commentId);
+        commentLikeService.unlike(memberId, commentId);
     }
 
     /**
@@ -45,16 +45,16 @@ public class CommentLikeController {
      * 로그인한 사용자가 좋아요 했는지
      * PostOrCommentLikesResponseDto 에 넣어 반환
      *
-     * @param requestDto
+     * @param
      * @param commentId
      * @return
      */
-    @GetMapping("/api/posts/{commentId}/likes")
+    @GetMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> findByCommentId(
-            @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long commentId){
 
-        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(requestDto.getMemberId(), commentId);
+        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(memberId, commentId);
 
         return new ResponseEntity<>(commentLikesResponseDto, HttpStatus.OK);
     }

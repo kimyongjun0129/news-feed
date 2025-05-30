@@ -19,6 +19,7 @@ public enum CustomErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."), // (친구추가) 사용자 없음
     FOLLOW_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 팔로우 한 사용자입니다."), // (친구추가) 팔로우 한 유저를 다시 팔로우할때
+    SELF_FOLLOW_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "본인을 팔로우 할 수 없습니다."), // (친구추가) 본인 팔로우
 
     UNAUTHORIZED_ACTION(HttpStatus.FORBIDDEN, "작성자가 아닙니다."), // (게시글, 댓글 수정 및 삭제) 게시물의 작성자, 댓글의 작성자, 댓글의 원 게시물 작성자 아닐 때
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."), // (게시글 조회) 저장된 게시물 없음

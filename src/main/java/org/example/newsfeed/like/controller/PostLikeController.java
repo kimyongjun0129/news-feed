@@ -22,20 +22,22 @@ public class PostLikeController {
 
     @PostMapping("/api/posts/{postId}/likes")
     public ResponseEntity<LikeResponseDto> like(
-            @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long postId){
 
-        LikeResponseDto likeResponseDto = likeService.like(requestDto.getMemberId(), requestDto.getPostId());
+        LikeResponseDto likeResponseDto = likeService.like(
+                memberId, postId
+        );
 
         return new ResponseEntity<>(likeResponseDto,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/api/posts/{postId}/likes")
     public void unlike(
-            @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long postId){
 
-        likeService.unlike(requestDto.getMemberId(), postId);
+        likeService.unlike(memberId, postId);
     }
 
     /**
@@ -51,10 +53,10 @@ public class PostLikeController {
      */
     @GetMapping("/api/posts/{postId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
-            @RequestBody LikeRequestDto requestDto, //세션 로그인 아이디로 변경
+            @RequestAttribute("memberId") Long memberId,
             @PathVariable Long postId){
 
-        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(requestDto.getMemberId(), postId);
+        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(memberId, postId);
 
         return new ResponseEntity<>(postLikesResponseDto, HttpStatus.OK);
     }

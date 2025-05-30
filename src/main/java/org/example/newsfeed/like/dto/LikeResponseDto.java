@@ -5,11 +5,11 @@ import org.example.newsfeed.like.entity.Like;
 
 @Getter
 public class LikeResponseDto {
-    private Long id;
+    private final Long id;
 
-    private Long memberId;
+    private final Long memberId;
 
-    private Long postId;
+    private final Long postId;
 
     public LikeResponseDto(Long id, Long memberId, Long postId){
         this.id = id;

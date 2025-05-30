@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
 
     List<CommentLike> findByMemberId(Long memberId);
-    List<Long> findMemberIdByCommentId(Long commentId);
+    List<CommentLike> findMemberIdByCommentId(Long commentId);
     Optional<CommentLike> findByMemberIdAndCommentId(Long memberId, Long commentId);
     Long countByCommentId(Long commentId);
     boolean existsByMemberIdAndCommentId(Long memberId, Long commentId);

@@ -1,5 +1,8 @@
 package org.example.newsfeed.common.exception.error;
 
+import lombok.Getter;
+
+@Getter
 public class CustomErrorResponseDto {
     private String code;
     private String message;

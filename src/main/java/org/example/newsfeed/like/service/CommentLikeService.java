@@ -50,7 +50,8 @@ public class CommentLikeService {
 
     public PostOrCommentLikesResponseDto findByCommentId(Long memberId, Long commentId){
 
-        List<Long> memberIds = commentLikeRepository.findMemberIdByCommentId(commentId);
+        List<CommentLike> likes = commentLikeRepository.findMemberIdByCommentId(commentId);
+        List<Long> memberIds = likes.stream().map(CommentLike::getMemberId).toList();
         Long countLikes = commentLikeRepository.countByCommentId(commentId);
         boolean likedByMe = commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
 
