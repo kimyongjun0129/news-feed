@@ -1,6 +1,7 @@
 package org.example.newsfeed.comment.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.example.newsfeed.comment.entity.Comment;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ public class CommentResponseDto {
     private final Long postId;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+    @Setter
+    private Long likeCount;
 
     public CommentResponseDto(Comment comment){
         this.id = comment.getId();

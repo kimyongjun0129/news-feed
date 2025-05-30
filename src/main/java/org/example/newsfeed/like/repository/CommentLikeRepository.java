@@ -5,6 +5,8 @@ import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.entity.CommentLike;
 import org.example.newsfeed.like.entity.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +29,6 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
                 -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND));
     }
 
+    @Query("SELECT cl.commentId, count(*) FROM CommentLike cl WHERE cl.commentId IN :commentIdList GROUP BY cl.commentId")
+    List<Object[]> countLikesByCommentIds(@Param("commentIdList")List<Long> commentIdList);
 }
