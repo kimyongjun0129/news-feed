@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class LikeService {
             throw new CustomException(CustomErrorCode.LIKE_ALREADY_EXISTS);
         }
 
-        Like like = new Like(1L, 1L);
+        Like like = new Like(memberId, postId);
         likeRepository.save(like);
 
         return new LikeResponseDto(like.getId(), like.getMemberId(), like.getPostId());
@@ -50,7 +51,10 @@ public class LikeService {
 
     public PostOrCommentLikesResponseDto findByPostId(Long memberId, Long postId){
 
-        List<Long> memberIds = likeRepository.findMemberIdByPostId(postId);
+        List<Like> likes = likeRepository.findMemberIdByPostId(postId);
+        List<Long> memberIds = likes.stream()
+                .map(Like::getMemberId)
+                .collect(Collectors.toList());
         Long countLikes = likeRepository.countByPostId(postId);
         boolean likedByMe = likeRepository.existsByMemberIdAndPostId(memberId, postId);
 
