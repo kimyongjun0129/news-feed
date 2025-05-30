@@ -21,14 +21,14 @@ public class FollowService {
     public void followUser(Long followeeId, Long followerId) {
 
         if(followerId.equals(followeeId)) {
-            throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+            throw new CustomException(CustomErrorCode.SELF_FOLLOW_NOT_ALLOWED);
         }
 
         Member followee = memberRepository.findMemberByIdOrElseThrow(followeeId);
         Member follower = memberRepository.findMemberByIdOrElseThrow(followerId);
 
         if(followRepository.findFollowByFolloweeAndFollower(followee, follower).isPresent()) {
-            throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+            throw new CustomException(CustomErrorCode.FOLLOW_ALREADY_EXISTS);
         }
 
         Follow follows = new Follow(followee, follower);
