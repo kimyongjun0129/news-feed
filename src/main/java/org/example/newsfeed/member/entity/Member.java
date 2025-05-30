@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.newsfeed.common.entity.BaseEntity;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor
@@ -28,6 +29,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+
+
+    //멤버 사인업 리퀘스트 디티오 생성자
     public Member(String memberName, String email, String password) {
         this.memberName = memberName;
         this.email = email;

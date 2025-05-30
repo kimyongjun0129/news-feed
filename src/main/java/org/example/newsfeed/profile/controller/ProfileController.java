@@ -15,6 +15,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     public ProfileController(ProfileService profileService) {
+
         this.profileService = profileService;
     }
 
