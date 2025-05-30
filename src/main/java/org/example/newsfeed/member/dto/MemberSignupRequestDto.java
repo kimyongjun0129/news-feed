@@ -11,4 +11,5 @@ public class MemberSignupRequestDto {
     private String memberName;
     private String email;
     private String password;
+
 }
