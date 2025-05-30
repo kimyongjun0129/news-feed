@@ -21,7 +21,7 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
 
-    public CommentLikeResponseDto like(Long memberId, Long commentId){
+    public CommentLikeResponseDto like(Long memberId, Long postId, Long commentId){
         //멤버 api 추가 후 주석 제거
         //Member member = memberRepository.findByIdOrElseThrow(memberId);
         Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
@@ -34,6 +34,11 @@ public class CommentLikeService {
         // 이미 좋아요 한 댓글에 좋아요 하려할 때
         if(commentLikeRepository.findByMemberIdAndCommentId(memberId, commentId).isPresent()){
             throw new CustomException(CustomErrorCode.LIKE_ALREADY_EXISTS);
+        }
+
+        // 해당 게시물에 달린 댓글이 아닐 때
+        if(!commentRepository.existsByIdAndPostId(commentId, postId)){
+            throw new CustomException(CustomErrorCode.COMMENT_NOT_BELONG_TO_POST);
         }
 
         CommentLike commentLike = new CommentLike(memberId, commentId);

@@ -23,9 +23,10 @@ public class CommentLikeController {
     @PostMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> like(
             @RequestAttribute("memberId") Long memberId,
+            @PathVariable Long postId,
             @PathVariable Long commentId){
 
-        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(memberId, commentId);
+        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(memberId, postId, commentId);
 
         return new ResponseEntity<>(commentLikeResponseDto,HttpStatus.CREATED);
     }
