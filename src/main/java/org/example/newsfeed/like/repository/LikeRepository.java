@@ -18,12 +18,12 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     default Like findByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(()
-                -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND,"커스텀에러 메시지1"));
+                -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND));
     }
 
     default Like findByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId){
         return findByMemberIdAndPostId(memberId, postId).orElseThrow(()
-                -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND, "커스텀 에러메시지"));
+                -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND));
     }
 
 }
