@@ -51,6 +51,8 @@ public class LikeService {
 
     public PostOrCommentLikesResponseDto findByPostId(Long memberId, Long postId){
 
+        Post post = postRepository.findPostByIdOrElseThrow(postId);
+
         List<Like> likes = likeRepository.findMemberIdByPostId(postId);
         List<Long> memberIds = likes.stream()
                 .map(Like::getMemberId)

@@ -55,6 +55,9 @@ public class CommentLikeService {
 
     public PostOrCommentLikesResponseDto findByCommentId(Long memberId, Long commentId){
 
+        // 댓글이 존재하지 않을 때
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+
         List<CommentLike> likes = commentLikeRepository.findMemberIdByCommentId(commentId);
         List<Long> memberIds = likes.stream().map(CommentLike::getMemberId).toList();
         Long countLikes = commentLikeRepository.countByCommentId(commentId);
