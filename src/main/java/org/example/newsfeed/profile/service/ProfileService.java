@@ -24,7 +24,7 @@ public class ProfileService {
     @Transactional
     public FindProfileResponseDto findProfile(Long id) {
         Member findUser = profileRepository.findByIdOrElseThrow(id);
-        return new FindProfileResponseDto(findUser.getEmail(),findUser.getNickname(), findUser.getIntro(),findUser.getMbti());
+        return new FindProfileResponseDto(findUser.getEmail(),findUser.getAge(),findUser.getNickname(), findUser.getIntro(),findUser.getMbti());
     }
 
     @Transactional
