@@ -1,7 +1,6 @@
 package org.example.newsfeed.common.exception.error;
 
 import lombok.Getter;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -28,6 +27,7 @@ public enum CustomErrorCode {
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 형식이 잘못되었습니다."), // (게시글 검색) 날짜 형식 틀림
 
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."), // (댓글 조회) 저장된 댓글 없음
+    COMMENT_NOT_BELONG_TO_POST(HttpStatus.NOT_FOUND, "댓글이 해당 게시물에 존재하지 않습니다."), // (댓글 조회) 게시물에 달린 댓글 아님
     INVALID_COMMENT_UPDATE(HttpStatus.BAD_REQUEST, "댓글 내용만 수정할 수 있습니다."), // (댓글 수정) 내용 외의 필드를 수정하려고 할 때
 
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 찾을 수 없습니다."), // (좋아요) 저장된 좋아요 없음
