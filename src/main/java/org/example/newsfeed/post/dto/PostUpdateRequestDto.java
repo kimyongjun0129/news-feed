@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class PostUpdateRequestDto {
-    @Size(max = 30)
+    @Size(min = 2, max = 20)
     private final String title;
 
     @Size(max = 5000)

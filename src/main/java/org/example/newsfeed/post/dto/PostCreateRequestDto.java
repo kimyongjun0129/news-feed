@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class PostCreateRequestDto {
     @NotNull
-    @Size(min = 2, max = 30)
+    @Size(min = 2, max = 20)
     private final String title;
 
     @NotNull

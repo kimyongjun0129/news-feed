@@ -1,5 +1,6 @@
 package org.example.newsfeed.post.service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.exception.CustomException;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final EntityManager entityManager;
 
     @Override
     public PostResponseDto createPost(String title, String content, Long memberId) {
@@ -51,13 +53,25 @@ public class PostServiceImpl implements PostService {
 
         checkPostMemberId(post, userId);
 
-        if(title != null){
-            post.updateTitle(title);
-        }
-        if(content != null){
-            post.updateContent(content);
+        // 적합한 에러 코드 필요(아무 내용 없이 업데이트 불가)
+        if(title == null && content == null){
+            throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
 
+        int update = 0;
+        if(title != null){
+            update += post.updateTitle(title);
+        }
+        if(content != null){
+            update += post.updateContent(content);
+        }
+
+        // 적합한 에러 코드 필요(변경사항 없이 업데이트 불가)
+        if(update == 0){
+            throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
+        }
+
+        entityManager.flush();
         return new PostResponseDto(post);
     }
 
