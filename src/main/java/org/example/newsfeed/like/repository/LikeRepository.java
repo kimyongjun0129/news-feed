@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     List<Like> findByMemberId(Long memberId);
-    List<Long> findMemberIdByPostId(Long postId);
+    List<Like> findMemberIdByPostId(Long postId);
     Optional<Like> findByMemberIdAndPostId(Long memberId, Long postId);
     Long countByPostId(Long postId);
     boolean existsByMemberIdAndPostId(Long memberId, Long postId);
