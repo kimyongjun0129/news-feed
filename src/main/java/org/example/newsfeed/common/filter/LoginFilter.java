@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.newsfeed.common.constant.SessionConstant;
-import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 import javax.security.sasl.AuthenticationException;
