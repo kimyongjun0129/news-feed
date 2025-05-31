@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authorService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponseDto> signup(@RequestBody MemberSignupRequestDto requestDto) {
@@ -39,27 +38,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(
+    public ResponseEntity<LoginResponseDto> login(
             @RequestBody LoginRequestDto loginRequestDto,
-            HttpServletRequest httpServletRequest, // 로그인 IP 파악같은 기능에 사용할 수 있을듯
-            HttpServletResponse httpServletResponse
+            HttpServletResponse response
     ) {
-        AuthResponseDto responseDto = authorService.login(
-                loginRequestDto.getEmail(),
-                loginRequestDto.getPassword()
-        );
+        LoginResponseDto loginResponseDto = authorService.login(loginRequestDto, response);
 
-        // login memberId 토큰에 삽입
-        String token = jwtUtil.generateToken(responseDto.getId());
-        Cookie cookie = new Cookie(SessionConstant.TOKEN, token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
-
-        // 토큰을 포함한 쿠키 Response 헤더에 포함
-        httpServletResponse.addCookie(cookie);
-
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
