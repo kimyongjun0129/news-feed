@@ -1,12 +1,14 @@
 package org.example.newsfeed.like.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.like.service.LikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +23,11 @@ public class PostLikeController {
 
     @PostMapping("/api/posts/{postId}/likes")
     public ResponseEntity<LikeResponseDto> like(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
         LikeResponseDto likeResponseDto = likeService.like(
-                memberId, postId
+                authUser.getId(), postId
         );
 
         return new ResponseEntity<>(likeResponseDto,HttpStatus.CREATED);
@@ -33,10 +35,10 @@ public class PostLikeController {
 
     @DeleteMapping("/api/posts/{postId}/likes")
     public void unlike(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
-        likeService.unlike(memberId, postId);
+        likeService.unlike(authUser.getId(), postId);
     }
 
     /**
@@ -52,10 +54,10 @@ public class PostLikeController {
      */
     @GetMapping("/api/posts/{postId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
-        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(memberId, postId);
+        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(authUser.getId(), postId);
 
         return new ResponseEntity<>(postLikesResponseDto, HttpStatus.OK);
     }
