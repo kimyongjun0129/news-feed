@@ -1,7 +1,6 @@
 package org.example.newsfeed.common.exception.error;
 
 import lombok.Getter;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -23,11 +22,13 @@ public enum CustomErrorCode {
 
     UNAUTHORIZED_ACTION(HttpStatus.FORBIDDEN, "작성자가 아닙니다."), // (게시글, 댓글 수정 및 삭제) 게시물의 작성자, 댓글의 작성자, 댓글의 원 게시물 작성자 아닐 때
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."), // (게시글 조회) 저장된 게시물 없음
+    INVALID_POST_UPDATE(HttpStatus.BAD_REQUEST, "게시물을 수정할 수 없습니다."), // (게시물 수정, 삭제) 요청 값 문제
 
     INVALID_SORT_OPTION(HttpStatus.BAD_REQUEST, "정렬 조건이 잘못되었습니다."), // (게시글 정렬) 잘못된 정렬 조건 입력
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 형식이 잘못되었습니다."), // (게시글 검색) 날짜 형식 틀림
 
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."), // (댓글 조회) 저장된 댓글 없음
+    COMMENT_NOT_BELONG_TO_POST(HttpStatus.NOT_FOUND, "댓글이 해당 게시물에 존재하지 않습니다."), // (댓글 조회) 게시물에 달린 댓글 아님
     INVALID_COMMENT_UPDATE(HttpStatus.BAD_REQUEST, "댓글 내용만 수정할 수 있습니다."), // (댓글 수정) 내용 외의 필드를 수정하려고 할 때
 
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 찾을 수 없습니다."), // (좋아요) 저장된 좋아요 없음

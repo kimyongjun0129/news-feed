@@ -7,6 +7,10 @@ import org.example.newsfeed.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment findPostById(Long id);
@@ -19,4 +23,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     }
 
     Page<Comment> findAllByPostId(Pageable pageable, Long postId);
+
+    boolean existsByIdAndPostId(Long commentId, Long postId);
+
+    @Query("SELECT c.postId, COUNT(c) FROM Comment c WHERE c.postId IN :postIdList GROUP BY c.postId")
+    List<Object[]> countCommentsByPostIds(@Param("postIdList")List<Long> postIdList);
 }

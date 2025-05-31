@@ -29,10 +29,14 @@ public class AuthController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody MemberDeleteRequestDto requestDto) {
+    public ResponseEntity<Void> delete(
+            @RequestBody MemberDeleteRequestDto requestDto,
+            @RequestAttribute("memberId") Long memberId
+    ) {
         authorService.delete(
                 requestDto.getEmail(),
-                requestDto.getPassword()
+                requestDto.getPassword(),
+                memberId
         );
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -47,6 +51,8 @@ public class AuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
+    // 현재 로그아웃 해도 토큰을 가지고 있으면 로그인 가능
+    // 블랙리스트 지정, access + refresh 토큰 방식으로 개선 가능
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             HttpServletRequest httpServletRequest,
