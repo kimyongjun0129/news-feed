@@ -1,7 +1,6 @@
 package org.example.newsfeed.like.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeed.like.dto.LikeRequestDto;
 import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.repository.LikeRepository;

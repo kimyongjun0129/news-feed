@@ -1,6 +1,5 @@
 package org.example.newsfeed.profile.repository;
 
-
 import org.example.newsfeed.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;

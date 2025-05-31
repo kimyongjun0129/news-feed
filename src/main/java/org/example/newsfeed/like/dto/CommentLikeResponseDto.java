@@ -2,15 +2,14 @@ package org.example.newsfeed.like.dto;
 
 import lombok.Getter;
 import org.example.newsfeed.like.entity.CommentLike;
-import org.example.newsfeed.like.entity.Like;
 
 @Getter
 public class CommentLikeResponseDto {
-    private Long id;
+    private final Long id;
 
-    private Long memberId;
+    private final Long memberId;
 
-    private Long commentId;
+    private final Long commentId;
 
     public CommentLikeResponseDto(Long id, Long memberId, Long commentId){
         this.id = id;

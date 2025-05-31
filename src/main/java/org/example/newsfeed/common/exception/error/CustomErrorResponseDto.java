@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class CustomErrorResponseDto {
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
 
     public CustomErrorResponseDto(String code, String message){
         this.code = code;

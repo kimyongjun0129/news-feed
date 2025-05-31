@@ -3,7 +3,6 @@ package org.example.newsfeed.member.repository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.member.entity.Member;
-import org.example.newsfeed.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

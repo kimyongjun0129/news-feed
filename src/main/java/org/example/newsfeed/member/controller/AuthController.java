@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.constant.SessionConstant;
-import org.example.newsfeed.common.filter.JwtUtil;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.service.AuthService;
 import org.springframework.http.HttpStatus;

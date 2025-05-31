@@ -1,6 +1,5 @@
 package org.example.newsfeed.post.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.dto.AuthUser;
