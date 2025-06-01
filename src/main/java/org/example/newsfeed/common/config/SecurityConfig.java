@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                         // 게시물 (post)
                         .requestMatchers(HttpMethod.POST, "/api/posts").hasRole(UserRole.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/*").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/posts/*").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole(UserRole.ADMIN.name())
