@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authorService;
 
+    /**
+     * @author : hojin
+     * @param   requestDto      회원가입 요청 정보를 담은 DTO (이름, 이메일, 비밀번호 등)
+     * @return                  생성된 사용자 인증 정보를 담은 ResponseEntity (201 Created)
+     */
     @PostMapping("/signup")
     public ResponseEntity<AuthResponseDto> signup(@RequestBody MemberSignupRequestDto requestDto) {
         AuthResponseDto responseDto = authorService.signup(
@@ -27,6 +32,12 @@ public class AuthController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    /**
+     * @author : hojin
+     * @param   requestDto      탈퇴 요청 정보 (이메일 및 비밀번호)
+     * @param   authUser        현재 로그인된 사용자 객체 (Spring Security)
+     * @return                  상태코드 200 OK 반환
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<Void> delete(
             @RequestBody MemberDeleteRequestDto requestDto,
@@ -40,6 +51,12 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * @author : kimyongjun0129
+     * @param   requestDto      로그인 요청 정보 (이메일, 비밀번호 등)
+     * @param   response        로그인 성공 시 토큰 등을 담기 위한 HttpServletResponse 객체
+     * @return                  로그인 결과 정보를 담은 ResponseEntity (200 OK)
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
             @RequestBody LoginRequestDto loginRequestDto,
