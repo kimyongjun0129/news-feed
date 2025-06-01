@@ -73,6 +73,11 @@ public class AuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
+    /**
+     * @author : kimyongjun0129
+     * @param   token           헤더에 들어있는 token 정보
+     * @return                  상태코드 200 OK 반환
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             @RequestHeader("Authorization") String token
