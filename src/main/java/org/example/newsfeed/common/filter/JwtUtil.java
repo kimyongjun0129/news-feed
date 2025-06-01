@@ -74,4 +74,15 @@ public class JwtUtil {
     public String getEmail(String token) {
         return extractClaims(token).get("email", String.class);
     }
+
+    // 토큰 만료 시간 추출
+    public long getExpiration(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        Date expiration = claims.getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
+    }
 }

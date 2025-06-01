@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.newsfeed.common.constant.UserRole;
 import org.example.newsfeed.common.dto.AuthUser;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    private final RedisTemplate<String, String> redisTemplate;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -37,6 +39,11 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
+
+        // 로그 아웃된 유저인지 검증
+        if (redisTemplate.opsForValue().get("logout:" + jwt) != null) {
+            throw new SecurityException("로그 아웃된 유저입니다.");
+        }
 
         try {
             // JWT 유효성 검사와 claims 추출

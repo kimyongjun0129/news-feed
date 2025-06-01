@@ -1,23 +1,27 @@
 package org.example.newsfeed.member.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeed.common.constant.SessionConstant;
 import org.example.newsfeed.common.dto.AuthUser;
+import org.example.newsfeed.common.filter.JwtUtil;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.service.AuthService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.rmi.ServerException;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/auth/")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authorService;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JwtUtil jwtUtil;
 
     /**
      * @author : hojin
@@ -69,20 +73,14 @@ public class AuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
-    // 현재 로그아웃 해도 토큰을 가지고 있으면 로그인 가능
-    // 블랙리스트 지정, access + refresh 토큰 방식으로 개선 가능
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
-            HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse
-    ) {
-        Cookie cookie = new Cookie(SessionConstant.TOKEN, null);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
+            @RequestHeader("Authorization") String token
+    ) throws ServerException {
+        String accessToken = jwtUtil.substringToken(token);
+        long expiration = jwtUtil.getExpiration(accessToken);
 
-        httpServletResponse.addCookie(cookie);
-
+        redisTemplate.opsForValue().set("logout:"+ accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -6,6 +6,7 @@ import org.example.newsfeed.common.filter.JwtFilter;
 import org.example.newsfeed.common.filter.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
@@ -38,9 +40,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 인증
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/logout").hasRole(UserRole.ADMIN.name())
                         .requestMatchers("/api/auth/signup").permitAll()
-                        .requestMatchers("/api/auth/delete").authenticated()
+                        .requestMatchers("/api/auth/delete").hasRole(UserRole.ADMIN.name())
 
                         // 게시물 (post)
                         .requestMatchers(HttpMethod.POST, "/api/posts").hasRole(UserRole.ADMIN.name())
@@ -79,7 +81,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/members/*/unfollow").hasRole(UserRole.ADMIN.name())
                 )
                 // 필터 등록
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(redisTemplate, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(configurer ->
                         configurer
                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
