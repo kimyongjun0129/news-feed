@@ -18,12 +18,24 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
+    /**
+     * @author : parkjj0408
+     * @param   id    프로필 조회 하고 싶은 사람의 PK 값
+     * @return        조회된 프로필 정보를 담은 ResponseEntity
+     */
     @GetMapping("/{id}/profile")
     public ResponseEntity<FindProfileResponseDto> findProfile(@PathVariable Long id) {
         FindProfileResponseDto findProfileResponseDto = profileService.findProfile(id);
         return new ResponseEntity<>(findProfileResponseDto, HttpStatus.OK);
 
     }
+
+    /**
+     * @author : parkjj0408
+     * @param   id          프로필 조회 하고 싶은 사람의 PK 값
+     * @param   requestDto  수정할 프로필 정보가 담긴 요청 DTO
+     * @return              조회된 프로필 정보를 담은 ResponseEntity
+     */
     @PatchMapping("/{id}/profile")
     public ResponseEntity<UpdateProfileResponseDto> updateProfile(
             @PathVariable Long id,
@@ -31,8 +43,6 @@ public class ProfileController {
         UpdateProfileResponseDto updateProfileResponseDto = profileService.UpdateProfile(id,requestDto);
         return new ResponseEntity<>(updateProfileResponseDto,HttpStatus.OK);
     }
-
-
 }
 
 
