@@ -1,14 +1,14 @@
 package org.example.newsfeed.like.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.like.dto.*;
 import org.example.newsfeed.like.repository.CommentLikeRepository;
 import org.example.newsfeed.like.service.CommentLikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -20,21 +20,21 @@ public class CommentLikeController {
 
     @PostMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> like(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId,
             @PathVariable Long commentId){
 
-        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(memberId, postId, commentId);
+        CommentLikeResponseDto commentLikeResponseDto = commentLikeService.like(authUser.getId(), postId, commentId);
 
         return new ResponseEntity<>(commentLikeResponseDto,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public void unlike(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long commentId){
 
-        commentLikeService.unlike(memberId, commentId);
+        commentLikeService.unlike(authUser.getId(), commentId);
     }
 
     /**
@@ -50,10 +50,10 @@ public class CommentLikeController {
      */
     @GetMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> findByCommentId(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long commentId){
 
-        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(memberId, commentId);
+        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(authUser.getId(), commentId);
 
         return new ResponseEntity<>(commentLikesResponseDto, HttpStatus.OK);
     }
