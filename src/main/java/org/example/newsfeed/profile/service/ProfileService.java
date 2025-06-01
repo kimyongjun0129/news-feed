@@ -29,7 +29,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public UpdateProfileResponseDto UpdateProfile(Long id, UpdateProfileRequestDto requestDto) {
+    public UpdateProfileResponseDto updateProfile(Long id, UpdateProfileRequestDto requestDto) {
         Member updateProfile = profileRepository.findByIdOrElseThrow(id);
 
 

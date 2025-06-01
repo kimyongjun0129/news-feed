@@ -40,7 +40,7 @@ public class ProfileController {
     public ResponseEntity<UpdateProfileResponseDto> updateProfile(
             @PathVariable Long id,
             @RequestBody UpdateProfileRequestDto requestDto){
-        UpdateProfileResponseDto updateProfileResponseDto = profileService.UpdateProfile(id,requestDto);
+        UpdateProfileResponseDto updateProfileResponseDto = profileService.updateProfile(id,requestDto);
         return new ResponseEntity<>(updateProfileResponseDto,HttpStatus.OK);
     }
 }
