@@ -9,6 +9,7 @@ public enum CustomErrorCode {
     EMAIL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "이메일 형식이 잘못되었습니다."), // (회원가입, 로그인) 이메일 형식 틀림
     PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호 형식이 잘못되었습니다."), // (회원가입, 로그인) 비번 형식 틀림
     USERNAME_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "유저네임 형식이 잘못되었습니다."), // (회원가입, 로그인) 유저네임 형식 틀림
+    MBTI_INVALID_FORMAT(HttpStatus.BAD_REQUEST,"MBTI는 정확히 4글자여야 합니다."), //(회원가입, 프로필 수정) MBTI 형식 틀림
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 이메일입니다."), // (로그인) 저장된 이메일 없음
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 잘못되었습니다."), // (로그인, 비번 변경) 비밀번호 틀림
     NEW_PASSWORD_SAME_AS_OLD(HttpStatus.CONFLICT, "현재 비밀번호와 다른 비밀번호를 사용해야합니다."), // (비번 변경) 전 비밀번호랑 같은 비밀번호 입력
