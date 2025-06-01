@@ -72,9 +72,9 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ) {
-        postService.deletePost(postId, memberId);
+        postService.deletePost(postId, authUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
