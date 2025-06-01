@@ -5,10 +5,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.constant.SessionConstant;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,12 +43,12 @@ public class AuthController {
     @DeleteMapping("/delete")
     public ResponseEntity<Void> delete(
             @RequestBody MemberDeleteRequestDto requestDto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ) {
         authorService.delete(
                 requestDto.getEmail(),
                 requestDto.getPassword(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -59,10 +61,10 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
-            @RequestBody LoginRequestDto loginRequestDto,
+            @RequestBody LoginRequestDto requestDto,
             HttpServletResponse response
     ) {
-        LoginResponseDto loginResponseDto = authorService.login(loginRequestDto, response);
+        LoginResponseDto loginResponseDto = authorService.login(requestDto, response);
 
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
