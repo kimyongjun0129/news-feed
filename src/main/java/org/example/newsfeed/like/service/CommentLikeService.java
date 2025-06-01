@@ -6,7 +6,6 @@ import org.example.newsfeed.comment.repository.CommentRepository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.dto.CommentLikeResponseDto;
-import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.entity.CommentLike;
 import org.example.newsfeed.like.repository.CommentLikeRepository;
@@ -21,9 +20,10 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
 
+    /**
+     * 좋아요 생성
+     */
     public CommentLikeResponseDto like(Long memberId, Long postId, Long commentId){
-        //멤버 api 추가 후 주석 제거
-        //Member member = memberRepository.findByIdOrElseThrow(memberId);
         Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
 
         // 본인 댓글에 좋아요 하려할 때
@@ -47,12 +47,18 @@ public class CommentLikeService {
         return new CommentLikeResponseDto(commentLike.getId(), commentLike.getMemberId(), commentLike.getCommentId());
     }
 
+    /**
+     * 좋아요 취소
+     */
     @Transactional
     public void unlike(Long memberId, Long commentId){
         CommentLike commentLike = commentLikeRepository.findByMemberIdAndCommentIdOrElseThrow(memberId, commentId);
         commentLikeRepository.delete(commentLike);
     }
 
+    /**
+     * 게시물 id로 게시물에 달린 좋아요 조회
+     */
     public PostOrCommentLikesResponseDto findByCommentId(Long memberId, Long commentId){
 
         // 댓글이 존재하지 않을 때
@@ -67,10 +73,4 @@ public class CommentLikeService {
 
     }
 
-    public List<CommentLikeResponseDto> findByMemberId(Long memberId){
-        return commentLikeRepository.findByMemberId(memberId)
-                .stream()
-                .map(CommentLikeResponseDto::toDto)
-                .toList();
-    }
 }

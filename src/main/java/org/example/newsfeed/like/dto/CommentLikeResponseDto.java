@@ -2,8 +2,10 @@ package org.example.newsfeed.like.dto;
 
 import lombok.Getter;
 import org.example.newsfeed.like.entity.CommentLike;
-import org.example.newsfeed.like.entity.Like;
 
+/**
+ * 댓글 좋아요 생성 시 사용하는 response dto
+ */
 @Getter
 public class CommentLikeResponseDto {
     private Long id;
