@@ -35,6 +35,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDto createComment(Long postId, String content, Long memberId) {
+        if(content == null) {
+            throw new CustomException(CustomErrorCode.INVALID_COMMENT_UPDATE, "내용 없이 댓글을 생성할 수 없습니다");
+        }
+
         Member member = memberRepository.findByIdOrElseThrow(memberId);
         Post post = postRepository.findById(postId).orElse(null);
         // 해당 postId를 가진 post 없으면 예외처리
@@ -45,7 +49,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment(content, member, post);
         Comment savedComment = commentRepository.save(comment);
 
-        return new CommentResponseDto(savedComment);
+        // 생성할 때 좋아요 개수 0개로 리턴
+        CommentResponseDto responseDto = new CommentResponseDto(savedComment);
+        responseDto.setLikeCount(0L);
+
+        return responseDto;
     }
 
     @Override
@@ -84,12 +92,12 @@ public class CommentServiceImpl implements CommentService {
 
         // 수정 내용 없을 때
         if (content == null) {
-            throw new CustomException(CustomErrorCode.INVALID_COMMENT_UPDATE);
+            throw new CustomException(CustomErrorCode.INVALID_COMMENT_UPDATE, "내용 없이 댓글을 수정할 수 없습니다");
         }
 
         // 기존 댓글과 동일할 때
         if (content.equals(comment.getContent())) {
-            throw new CustomException(CustomErrorCode.INVALID_COMMENT_UPDATE);
+            throw new CustomException(CustomErrorCode.INVALID_COMMENT_UPDATE, "수정 이전과 내용이 동일합니다");
         }
 
         comment.setContent(content);
