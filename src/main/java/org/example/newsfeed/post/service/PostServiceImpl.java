@@ -7,6 +7,8 @@ import org.example.newsfeed.comment.repository.CommentRepository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.repository.LikeRepository;
+import org.example.newsfeed.member.entity.Member;
+import org.example.newsfeed.member.repository.MemberRepository;
 import org.example.newsfeed.post.dto.PostResponseDto;
 import org.example.newsfeed.post.entity.Post;
 import org.example.newsfeed.post.repository.PostRepository;
@@ -28,11 +30,13 @@ public class PostServiceImpl implements PostService {
     private final EntityManager entityManager;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public PostResponseDto createPost(String title, String content, Long memberId) {
+        Member member = memberRepository.findByIdOrElseThrow(memberId);
 
-        Post post = new Post(title, content, memberId);
+        Post post = new Post(title, content, member);
 
         Post savedPost = postRepository.save(post);
 
@@ -122,7 +126,7 @@ public class PostServiceImpl implements PostService {
 
     // 업데이트, 삭제할 때 게시물 ID와 로그인한 유저 ID 일치하는지 확인
     private void checkPostMemberId(Post post, Long memberId){
-        if(!post.getMemberId().equals(memberId)){
+        if(!post.getMember().getId().equals(memberId)){
             throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION);
         }
     }

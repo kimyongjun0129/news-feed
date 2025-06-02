@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.newsfeed.comment.entity.Comment;
 import org.example.newsfeed.common.entity.BaseEntity;
+import org.example.newsfeed.member.entity.Member;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,13 +29,19 @@ public class Post extends BaseEntity {
     @NotNull
     private String content;
 
-    private Long memberId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Post() {}
-    public Post(String title, String content, Long memberId){
+    public Post(String title, String content, Member member){
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
+        this.member = member;
     }
 
     public int updateTitle(String title) {
