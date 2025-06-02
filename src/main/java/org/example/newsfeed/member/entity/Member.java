@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false,length = 20)
     private String intro;
 
-    //엠비티아이
+//    //엠비티아이
     @Setter
     @Column(length = 4)
     private String mbti;
