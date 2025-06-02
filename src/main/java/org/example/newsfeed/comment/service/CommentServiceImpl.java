@@ -9,6 +9,9 @@ import org.example.newsfeed.comment.repository.CommentRepository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.repository.CommentLikeRepository;
+import org.example.newsfeed.member.entity.Member;
+import org.example.newsfeed.member.repository.MemberRepository;
+import org.example.newsfeed.post.entity.Post;
 import org.example.newsfeed.post.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,15 +30,18 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final EntityManager entityManager;
     private final CommentLikeRepository commentLikeRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public CommentResponseDto createComment(Long postId, String content, Long memberId) {
+        Member member = memberRepository.findByIdOrElseThrow(memberId);
+        Post post = postRepository.findById(postId).orElse(null);
         // 해당 postId를 가진 post 없으면 예외처리
-        if (postRepository.findById(postId).orElse(null) == null) {
+        if (post == null) {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
 
-        Comment comment = new Comment(content, memberId, postId);
+        Comment comment = new Comment(content, member, post);
         Comment savedComment = commentRepository.save(comment);
 
         return new CommentResponseDto(savedComment);
@@ -73,16 +79,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentResponseDto updateComment(Long postId, Long commentId, String content, Long memberId) {
-        // 해당 postId를 가진 post 없으면 예외처리
-        if (postRepository.findById(postId).orElse(null) == null) {
-            throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
-        }
-
-        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
-        // 로그인한 memberId 와 작성자 memberId 가 다를 경우 예외처리
-        if (!memberId.equals(comment.getMemberId())) {
-            throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION);
-        }
+        Comment comment = checkPostAndMember(postId, commentId, memberId);
 
         // 수정 내용 없을 때
         if (content == null) {
@@ -102,17 +99,25 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long postId, Long commentId, Long memberId) {
+        Comment comment = checkPostAndMember(postId, commentId, memberId);
+
+        commentRepository.delete(comment);
+    }
+
+    // PostId, MemberId 검증
+    private Comment checkPostAndMember(Long postId, Long commentId, Long memberId) {
         // 해당 postId를 가진 post 없으면 예외처리
-        if (postRepository.findById(postId).orElse(null) == null) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if(post == null) {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
 
-        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         // 로그인한 memberId 와 작성자 memberId 가 다를 경우 예외처리
-        if (!memberId.equals(comment.getMemberId())) {
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+        if(!memberId.equals(comment.getMember().getId())){
             throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION);
         }
 
-        commentRepository.delete(comment);
+        return comment;
     }
 }

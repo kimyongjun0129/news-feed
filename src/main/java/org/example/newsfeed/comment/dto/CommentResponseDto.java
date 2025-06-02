@@ -20,8 +20,8 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment comment){
         this.id = comment.getId();
         this.content = comment.getContent();
-        this.memberId = comment.getMemberId();
-        this.postId = comment.getPostId();
+        this.memberId = comment.getMember().getId();
+        this.postId = comment.getPost().getId();
         this.createdAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
     }
