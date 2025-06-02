@@ -32,6 +32,7 @@ public class FollowService {
         Optional<Member> followee = memberRepository.findMemberById(followeeId);
         Optional<Member> follower = memberRepository.findMemberById(followerId);
 
+        // 팔로워가 존재하지 않는 경우, 예외 발생
         if(followee.isEmpty() || follower.isEmpty()) {
             throw new CustomException(USER_NOT_FOUND);
         }
