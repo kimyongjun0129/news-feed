@@ -20,6 +20,12 @@ import static org.example.newsfeed.common.constant.PasswordFormatConstant.EMAIL_
 import static org.example.newsfeed.common.exception.error.CustomErrorCode.EMAIL_NOT_FOUND;
 import static org.example.newsfeed.common.exception.error.CustomErrorCode.INVALID_PASSWORD;
 
+/**
+ * 인증 관련 로직을 처리하는 서비스 클래스입니다.
+ * 회원가입, 로그인, 회원 탈퇴 기능을 제공합니다.
+ *
+ * @author Hyeonwoo
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -30,6 +36,21 @@ public class AuthService {
     private final FollowRepository followRepository;
     private final JwtUtil jwtUtil;
 
+    /**
+     * 회원가입 요청을 처리합니다.
+     * 이메일/비밀번호 형식 검증, 중복 체크, 비밀번호 암호화, 회원 정보 저장을 수행합니다.
+     *
+     * @author Hyeonwoo
+     * @param memberName   사용자 이름
+     * @param email        사용자 이메일
+     * @param password     사용자 비밀번호
+     * @param age          사용자 나이
+     * @param nickname     사용자 닉네임
+     * @param intro        자기소개
+     * @param mbti         MBTI (4자리 문자열)
+     * @return             생성된 회원 정보를 담은 AuthResponseDto
+     * @throws CustomException 유효하지 않은 이메일/비밀번호/MBTI 형식, 중복된 이메일 등 예외 발생
+     */
     public AuthResponseDto signup(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
         // 이메일 형식이 유효하지 않을 경우
         if (!PasswordFormatConstant.EMAIL_REGEX.matcher(email).matches()) {
@@ -65,6 +86,17 @@ public class AuthService {
         return new AuthResponseDto(savedMember);
     }
 
+    /**
+     * 회원 탈퇴 요청을 처리합니다.
+     * 이메일 및 비밀번호 검증 후 회원 상태를 '삭제'로 처리하며,
+     * 작성한 게시글은 영구 삭제됩니다.
+     *
+     * @author Hyeonwoo
+     * @param email     요청 이메일
+     * @param password  요청 비밀번호
+     * @param memberId  현재 로그인된 사용자 ID
+     * @throws CustomException 이메일 없음, 권한 없음, 비밀번호 불일치 등의 예외 발생
+     */
     @Transactional
     public void delete(String email, String password, Long memberId) {
         // MEMBER_NOT_FOUND 예외 없이 처리
@@ -90,6 +122,16 @@ public class AuthService {
         followRepository.deleteByFolloweeId(memberId);
     }
 
+    /**
+     * 로그인 요청을 처리하고 JWT 토큰을 발급합니다.
+     * 이메일/비밀번호를 검증한 후, 응답 헤더에 토큰을 포함시킵니다.
+     *
+     * @author Hyeonwoo
+     * @param loginRequestDto  로그인 요청 정보 (이메일, 비밀번호)
+     * @param response         HttpServletResponse 객체 (JWT 토큰을 헤더에 삽입)
+     * @return                 로그인 결과 (회원 ID 및 토큰)를 담은 LoginResponseDto
+     * @throws CustomException 이메일 형식 오류, 미존재 이메일, 비밀번호 불일치 시 발생
+     */
     public LoginResponseDto login(
             LoginRequestDto loginRequestDto,
             HttpServletResponse response
