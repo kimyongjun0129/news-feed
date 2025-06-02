@@ -3,6 +3,10 @@ CREATE TABLE members
     id           BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '식별자',
     member_name   VARCHAR(20) NOT NULL COMMENT '이름',
     email        VARCHAR(60) NOT NULL UNIQUE COMMENT '이메일',
+    age           BIGINT COMMENT '나이',
+    nickname      VARCHAR(20) NOT NULL COMMENT '별명',
+    mbti         VARCHAR(4) NOT NULL COMMENT 'MBTI',
+    intro        VARCHAR(20) NOT NULL COMMENT '자기소개',
     password     VARCHAR(255) NOT NULL COMMENT '비밀번호',
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
