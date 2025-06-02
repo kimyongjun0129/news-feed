@@ -39,18 +39,20 @@ public class AuthService {
             throw new CustomException(CustomErrorCode.PASSWORD_INVALID_FORMAT);
         }
 
-        // 중복된 사용자 이메일일 경우
-        if (memberRepository.existsByEmail(email)) {
-            throw new CustomException(CustomErrorCode.EMAIL_ALREADY_EXISTS);
+        // 삭제됐던 이메일일 경우
+        // 중복된 이메일일 경우
+        Member existMember = memberRepository.getMemberByEmail(email);
+        if(existMember != null){
+            if(existMember.isDeleted()){
+                throw new CustomException(CustomErrorCode.DELETED_ACCOUNT);
+            } else {
+                throw new CustomException(CustomErrorCode.EMAIL_ALREADY_EXISTS);
+            }
         }
+
         //MBTI 4글자 초과해 입력한 경우
         if(mbti.length()!=4){
             throw new CustomException(CustomErrorCode.MBTI_INVALID_FORMAT);
-        }
-
-        // 삭제됐던 이메일일 경우
-        if (memberRepository.existsByEmail("[DELETED]_" + email)) {
-            throw new CustomException(CustomErrorCode.DELETED_ACCOUNT);
         }
 
         // 암호화 및 회원 저장
