@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     private int age;
 
     @Setter
-    @Column(length = 20, nullable = false, unique = false)
+    @Column(length = 20, nullable = false)
     private String nickname;
 
     @Setter
