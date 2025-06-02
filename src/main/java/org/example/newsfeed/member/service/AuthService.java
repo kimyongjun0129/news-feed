@@ -9,6 +9,7 @@ import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.common.filter.JwtUtil;
 import org.example.newsfeed.common.security.PasswordEncoder;
+import org.example.newsfeed.follow.repository.FollowRepository;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
@@ -26,6 +27,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
     private final JwtUtil jwtUtil;
 
     public AuthResponseDto signup(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
@@ -85,6 +87,7 @@ public class AuthService {
         // member 는 db 에서 삭제되지 않지만 가지고 있던 post 는 삭제
         member.delete();
         postRepository.deleteByMemberId(memberId);
+        followRepository.deleteByFolloweeId(memberId);
     }
 
     public LoginResponseDto login(
