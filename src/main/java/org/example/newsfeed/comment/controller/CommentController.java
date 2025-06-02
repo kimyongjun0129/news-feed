@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
+    // (PostId 게시글에) 댓글 생성
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
@@ -33,6 +34,7 @@ public class CommentController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // (PostId 게시물에 포함된) 댓글 조회
     @GetMapping
     public ResponseEntity<PageDto<CommentResponseDto>> findComments(
             @PathVariable Long postId,
@@ -43,6 +45,7 @@ public class CommentController {
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
     }
 
+    // 댓글 수정
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
@@ -59,6 +62,7 @@ public class CommentController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 댓글 삭제
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,

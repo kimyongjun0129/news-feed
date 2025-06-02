@@ -3,6 +3,7 @@ package org.example.newsfeed.like.repository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.entity.Like;
+import org.example.newsfeed.like.repository.projection.PostLikeCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +29,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
                 -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND));
     }
 
-    @Query("SELECT l.postId, COUNT(l) FROM Like l WHERE l.postId IN :postIdList GROUP BY l.postId")
-    List<Object[]> countLikesByPostIds(@Param("postIdList") List<Long> postIdList);
+    // postIdList 에 해당하는 postId 별 like 개수
+    @Query("SELECT l.postId AS postId, COUNT(l) AS COUNT FROM Like l WHERE l.postId IN :postIdList GROUP BY l.postId")
+    List<PostLikeCount> countLikesByPostIds(@Param("postIdList") List<Long> postIdList);
 }

@@ -2,6 +2,7 @@ package org.example.newsfeed.like.repository;
 
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
+import org.example.newsfeed.like.repository.projection.CommentLikeCount;
 import org.example.newsfeed.like.entity.CommentLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,6 +29,7 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
                 -> new CustomException(CustomErrorCode.LIKE_NOT_FOUND));
     }
 
-    @Query("SELECT cl.commentId, count(*) FROM CommentLike cl WHERE cl.commentId IN :commentIdList GROUP BY cl.commentId")
-    List<Object[]> countLikesByCommentIds(@Param("commentIdList")List<Long> commentIdList);
+    // commentIdList 에 해당하는 commentId 별 like 개수
+    @Query("SELECT cl.commentId AS commentId, count(*) AS count FROM CommentLike cl WHERE cl.commentId IN :commentIdList GROUP BY cl.commentId")
+    List<CommentLikeCount> countLikesByCommentIds(@Param("commentIdList")List<Long> commentIdList);
 }

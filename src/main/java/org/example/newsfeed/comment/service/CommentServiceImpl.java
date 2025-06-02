@@ -8,6 +8,7 @@ import org.example.newsfeed.comment.entity.Comment;
 import org.example.newsfeed.comment.repository.CommentRepository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
+import org.example.newsfeed.like.repository.projection.CommentLikeCount;
 import org.example.newsfeed.like.repository.CommentLikeRepository;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
@@ -54,17 +55,17 @@ public class CommentServiceImpl implements CommentService {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
 
-        // 최신 순으로 정렬되어 있고, 다른 정렬 기준(좋아요순)이 필요하면 RequestParam 으로 받을 수 있을 것 같다
+        // 페이지 설정(offset, size, 정렬(최신순))
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         Page<Comment> commentPage = commentRepository.findAllByPostId(pageable, postId);
 
-        // 좋아요 수 받아올 댓글 ID List
+        // 조회할 각 댓글의 좋아요 수 가져오기
         List<Long> commentIdList = commentPage.getContent().stream().map(Comment::getId).toList();
-        List<Object[]> result = commentLikeRepository.countLikesByCommentIds(commentIdList);
+        List<CommentLikeCount> result = commentLikeRepository.countLikesByCommentIds(commentIdList);
         Map<Long, Long> likesCountMap = new HashMap<>();
-        for (Object[] row : result) {
-            Long commentId = (Long) row[0];
-            Long likeCount = (Long) row[1];
+        for (CommentLikeCount row : result) {
+            Long commentId = row.getCommentId();
+            Long likeCount = row.getCount();
             likesCountMap.put(commentId, likeCount);
         }
 
@@ -93,6 +94,8 @@ public class CommentServiceImpl implements CommentService {
 
         comment.setContent(content);
 
+        // 영속성 context db 로 전달 -> updatedAt 시간 최신화
+        // @Transactional 때문에 모든 작업 끝나야 update 되기 때문에 flush()없으면 이전에 가지고 있던 updatedAt 리턴
         entityManager.flush();
         return new CommentResponseDto(comment);
     }
