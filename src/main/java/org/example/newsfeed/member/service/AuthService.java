@@ -21,7 +21,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthResponseDto signup(String memberName, String email, String password) {
+    public AuthResponseDto signup(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
         // 이메일 형식이 유효하지 않을 경우
         if (!PasswordFormatConstant.EMAIL_REGEX.matcher(email).matches()) {
             throw new CustomException(CustomErrorCode.EMAIL_INVALID_FORMAT);
@@ -36,10 +36,14 @@ public class AuthService {
         if (memberRepository.existsByEmail(email)) {
             throw new CustomException(CustomErrorCode.EMAIL_ALREADY_EXISTS);
         }
+        //MBTI 4글자 초과해 입력한 경우
+        if(mbti.length()!=4){
+            throw new CustomException(CustomErrorCode.MBTI_INVALID_FORMAT);
+        }
 
         // 암호화 및 회원 저장
         String hashedPassword = passwordEncoder.encode(password);
-        Member member = new Member(memberName, email, hashedPassword);
+        Member member = new Member(memberName, email, hashedPassword,age,nickname,intro,mbti);
         Member savedMember = memberRepository.save(member);
 
         return new AuthResponseDto(savedMember);

@@ -7,6 +7,7 @@ public class FindProfileResponseDto {
 
 // 식별자를 넣으면 어떤 값이 나오게 할 것인가
     // 닉네임,자기소개
+    private String memberName;
     private String email;
     private int age;
     private final String nickname;
@@ -15,7 +16,8 @@ public class FindProfileResponseDto {
 
 
 
-    public FindProfileResponseDto(String email,int age,String nickname,String intro,String mbti){
+    public FindProfileResponseDto(String memberName, String email,int age,String nickname,String intro,String mbti){
+        this.memberName = memberName;
         this.email = email;
        this.age= age;
         this.nickname = nickname;

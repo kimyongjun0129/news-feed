@@ -47,9 +47,13 @@ public class Member extends BaseEntity {
 
 
     //멤버 사인업 리퀘스트 디티오 생성자
-    public Member(String memberName, String email, String password) {
+    public Member(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
         this.memberName = memberName;
         this.email = email;
         this.password = password;
+        this.age =age;
+        this.nickname = nickname;
+        this.intro=intro;
+        this.mbti=mbti;
     }
 }
