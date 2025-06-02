@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
-import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.like.service.LikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,10 +2,8 @@ package org.example.newsfeed.profile.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class UpdateProfileRequestDto {
 
     //프로필 수정

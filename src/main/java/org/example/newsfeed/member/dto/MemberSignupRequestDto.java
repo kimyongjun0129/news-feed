@@ -1,7 +1,6 @@
 package org.example.newsfeed.member.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
