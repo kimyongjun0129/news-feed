@@ -1,6 +1,7 @@
 package org.example.newsfeed.profile.controller;
 
 
+import jakarta.validation.Valid;
 import org.example.newsfeed.profile.dto.FindProfileResponseDto;
 import org.example.newsfeed.profile.dto.UpdateProfileRequestDto;
 import org.example.newsfeed.profile.dto.UpdateProfileResponseDto;
@@ -15,6 +16,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     public ProfileController(ProfileService profileService) {
+
         this.profileService = profileService;
     }
 
@@ -27,7 +29,7 @@ public class ProfileController {
     @PatchMapping("/{id}/profile")
     public ResponseEntity<UpdateProfileResponseDto> updateProfile(
             @PathVariable Long id,
-            @RequestBody UpdateProfileRequestDto requestDto){
+            @Valid @RequestBody UpdateProfileRequestDto requestDto){
         UpdateProfileResponseDto updateProfileResponseDto = profileService.UpdateProfile(id,requestDto);
         return new ResponseEntity<>(updateProfileResponseDto,HttpStatus.OK);
     }

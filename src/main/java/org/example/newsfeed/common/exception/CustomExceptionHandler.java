@@ -13,7 +13,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<CustomErrorResponseDto> handleCustomException(CustomException e){
         CustomErrorCode errorCode = e.getErrorCode();
 
-        CustomErrorResponseDto errorResponseDto = new CustomErrorResponseDto(errorCode.name(),errorCode.getMessage());
+        CustomErrorResponseDto errorResponseDto = new CustomErrorResponseDto(errorCode.name(),e.getMessage());
 
         return new ResponseEntity<>(errorResponseDto, errorCode.getHttpStatus());
     }
