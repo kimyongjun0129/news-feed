@@ -70,8 +70,8 @@ public class AuthService {
         }
 
         // 이메일 재사용 방지
-        Member deletedMember = new Member(member.getMemberName(), "[DELETED]_" + member.getEmail(), member.getPassword());
-        memberRepository.save(deletedMember);
+        member.delete();
+        memberRepository.save(member);
 
         // 실제 삭제
         memberRepository.delete(member);

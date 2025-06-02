@@ -28,9 +28,14 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    private boolean isDeleted = false;
+
     public Member(String memberName, String email, String password) {
         this.memberName = memberName;
         this.email = email;
         this.password = password;
+    }
+    public void delete() {
+        this.isDeleted = true;
     }
 }
