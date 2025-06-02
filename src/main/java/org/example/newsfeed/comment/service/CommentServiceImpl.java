@@ -8,6 +8,7 @@ import org.example.newsfeed.comment.entity.Comment;
 import org.example.newsfeed.comment.repository.CommentRepository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
+import org.example.newsfeed.like.repository.projection.CommentLikeCount;
 import org.example.newsfeed.like.repository.CommentLikeRepository;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
@@ -60,11 +61,11 @@ public class CommentServiceImpl implements CommentService {
 
         // 좋아요 수 받아올 댓글 ID List
         List<Long> commentIdList = commentPage.getContent().stream().map(Comment::getId).toList();
-        List<Object[]> result = commentLikeRepository.countLikesByCommentIds(commentIdList);
+        List<CommentLikeCount> result = commentLikeRepository.countLikesByCommentIds(commentIdList);
         Map<Long, Long> likesCountMap = new HashMap<>();
-        for (Object[] row : result) {
-            Long commentId = (Long) row[0];
-            Long likeCount = (Long) row[1];
+        for (CommentLikeCount row : result) {
+            Long commentId = row.getCommentId();
+            Long likeCount = row.getCount();
             likesCountMap.put(commentId, likeCount);
         }
 
@@ -93,6 +94,8 @@ public class CommentServiceImpl implements CommentService {
 
         comment.setContent(content);
 
+        // 영속성 context db 로 전달 -> updatedAt 시간 최신화
+        // @Transactional 때문에 모든 작업 끝나야 update 되기 때문에 flush()없으면 이전에 가지고 있던 updatedAt 리턴
         entityManager.flush();
         return new CommentResponseDto(comment);
     }

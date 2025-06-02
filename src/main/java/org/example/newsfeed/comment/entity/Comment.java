@@ -20,11 +20,12 @@ public class Comment extends BaseEntity {
     @NotNull
     private String content;
 
-    @Setter
+    // comment : member = N : 1 관계, 지연로딩, member 필수
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    // comment : member = N : 1 관계, 지연로딩, member 필수
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

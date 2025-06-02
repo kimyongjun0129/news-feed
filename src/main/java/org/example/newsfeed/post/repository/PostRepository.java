@@ -10,7 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    // 적합한 exception 으로 변경하기
+    // memberId로 게시물 지우기
+    void deleteByMemberId(Long memberId);
+
+    // postId로 게시물 찾기
     default Post findPostByIdOrElseThrow(Long id){
         return findById(id)
                 .orElseThrow(() ->
