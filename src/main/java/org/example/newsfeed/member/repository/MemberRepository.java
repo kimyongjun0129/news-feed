@@ -1,7 +1,5 @@
 package org.example.newsfeed.member.repository;
 
-import org.example.newsfeed.common.exception.CustomException;
-import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
@@ -12,9 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByEmail(String email);
     Optional<Member> findByEmail(String email);
-    Optional<Member> findByOriginalEmail(String originalEmail);
 
     Member getMemberByEmail(String email);
 
