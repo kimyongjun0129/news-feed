@@ -22,6 +22,7 @@ public enum CustomErrorCode {
 
     UNAUTHORIZED_ACTION(HttpStatus.FORBIDDEN, "작성자가 아닙니다."), // (게시글, 댓글 수정 및 삭제) 게시물의 작성자, 댓글의 작성자, 댓글의 원 게시물 작성자 아닐 때
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."), // (게시글 조회) 저장된 게시물 없음
+    INVALID_POST_UPDATE(HttpStatus.BAD_REQUEST, "게시물을 수정할 수 없습니다."), // (게시물 수정, 삭제) 요청 값 문제
 
     INVALID_SORT_OPTION(HttpStatus.BAD_REQUEST, "정렬 조건이 잘못되었습니다."), // (게시글 정렬) 잘못된 정렬 조건 입력
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 형식이 잘못되었습니다."), // (게시글 검색) 날짜 형식 틀림
