@@ -33,7 +33,12 @@ public class AuthController {
         AuthResponseDto responseDto = authorService.signup(
                 requestDto.getMemberName(),
                 requestDto.getEmail(),
-                requestDto.getPassword()
+                requestDto.getPassword(),
+                requestDto.getAge(),
+                requestDto.getNickname(),
+                requestDto.getIntro(),
+                requestDto.getMbti()
+
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
