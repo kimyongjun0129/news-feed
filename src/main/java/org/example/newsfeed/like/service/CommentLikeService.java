@@ -51,18 +51,29 @@ public class CommentLikeService {
      * 좋아요 취소
      */
     @Transactional
-    public void unlike(Long memberId, Long commentId){
+    public void unlike(Long memberId, Long postId, Long commentId){
+
+        // 해당 게시물에 달린 댓글이 아닐 때
+        if(!commentRepository.existsByIdAndPostId(commentId, postId)){
+            throw new CustomException(CustomErrorCode.COMMENT_NOT_BELONG_TO_POST);
+        }
+
         CommentLike commentLike = commentLikeRepository.findByMemberIdAndCommentIdOrElseThrow(memberId, commentId);
         commentLikeRepository.delete(commentLike);
     }
 
     /**
-     * 게시물 id로 게시물에 달린 좋아요 조회
+     * 댓글 id로 댓글에 달린 좋아요 조회
      */
-    public PostOrCommentLikesResponseDto findByCommentId(Long memberId, Long commentId){
+    public PostOrCommentLikesResponseDto findByCommentId(Long memberId, Long postId, Long commentId){
 
         // 댓글이 존재하지 않을 때
         Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+
+        // 해당 게시물에 달린 댓글이 아닐 때
+        if(!commentRepository.existsByIdAndPostId(commentId, postId)){
+            throw new CustomException(CustomErrorCode.COMMENT_NOT_BELONG_TO_POST);
+        }
 
         List<CommentLike> likes = commentLikeRepository.findMemberIdByCommentId(commentId);
         List<Long> memberIds = likes.stream().map(CommentLike::getMemberId).toList();
