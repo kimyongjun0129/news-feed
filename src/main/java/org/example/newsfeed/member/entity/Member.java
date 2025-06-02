@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.newsfeed.comment.entity.Comment;
 import org.example.newsfeed.common.entity.BaseEntity;
+import org.example.newsfeed.post.entity.Post;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -34,7 +39,7 @@ public class Member extends BaseEntity {
     private int age;
 
     @Setter
-    @Column(length = 20, nullable = false, unique = false)
+    @Column(length = 20, nullable = false)
     private String nickname;
 
     @Setter
@@ -46,6 +51,11 @@ public class Member extends BaseEntity {
     @Column(length = 4)
     private String mbti;
 
+    @OneToMany(mappedBy = "member")
+    private final List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private final List<Comment> comments = new ArrayList<>();
 
     //멤버 사인업 리퀘스트 디티오 생성자
     public Member(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
@@ -57,6 +67,13 @@ public class Member extends BaseEntity {
         this.intro=intro;
         this.mbti=mbti;
     }
+
+    public Member(String memberName, String email, String password) {
+        this.memberName = memberName;
+        this.email = email;
+        this.password = password;
+    }
+
     public void delete() {
         this.isDeleted = true;
     }

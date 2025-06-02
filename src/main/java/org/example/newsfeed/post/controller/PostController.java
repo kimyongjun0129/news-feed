@@ -1,8 +1,8 @@
 package org.example.newsfeed.post.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.post.dto.PageDto;
 import org.example.newsfeed.post.dto.PostCreateRequestDto;
 import org.example.newsfeed.post.dto.PostResponseDto;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,19 +23,21 @@ import java.time.LocalDateTime;
 public class PostController {
     private final PostService postService;
 
+    // 게시물 생성
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
             @Valid @RequestBody PostCreateRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         PostResponseDto responseDto = postService.createPost(
                 dto.getTitle(),
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // 단일 게시물 조회
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(
             @PathVariable Long postId
@@ -42,6 +45,7 @@ public class PostController {
         return new ResponseEntity<>(postService.getPost(postId), HttpStatus.OK);
     }
 
+    // 게시물 페이지 조회
     @GetMapping
     public ResponseEntity<PageDto<PostResponseDto>> findPosts(
             @RequestParam(defaultValue = "2025-05-28-00-00-00") @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")LocalDateTime from,
@@ -53,27 +57,29 @@ public class PostController {
         return new ResponseEntity<>(new PageDto<>(responseDtoPage), HttpStatus.OK);
     }
 
+    // 게시물 수정
     @PatchMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
             @Valid @RequestBody PostUpdateRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         PostResponseDto responseDto = postService.updatePost(
                 postId,
                 dto.getTitle(),
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 게시물 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ) {
-        postService.deletePost(postId, memberId);
+        postService.deletePost(postId, authUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -2,7 +2,6 @@ package org.example.newsfeed.post.service;
 
 import org.example.newsfeed.post.dto.PostResponseDto;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 

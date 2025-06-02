@@ -27,7 +27,7 @@ public class ProfileService {
     }
 //프로필 수정
     @Transactional
-    public UpdateProfileResponseDto UpdateProfile(Long id, UpdateProfileRequestDto requestDto) {
+    public UpdateProfileResponseDto updateProfile(Long id, UpdateProfileRequestDto requestDto) {
         //id값으로 레파지토리에서 값을 찾아오고 그 값들을 비교 만약에 id 없으면 오류 내기
         Member updateProfile = memberRepository.findByIdOrElseThrow(id);
 
@@ -77,9 +77,6 @@ public class ProfileService {
 
         return new UpdateProfileResponseDto(updateProfile);
     }
-
-
-
-    }
+}
 
 

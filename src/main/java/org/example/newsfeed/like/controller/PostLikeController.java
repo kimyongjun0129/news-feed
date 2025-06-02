@@ -1,12 +1,13 @@
 package org.example.newsfeed.like.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
-import org.example.newsfeed.like.repository.LikeRepository;
 import org.example.newsfeed.like.service.LikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,63 +20,73 @@ public class PostLikeController {
     private final LikeService likeService;
 
     /**
-     * 좋아요 생성 메소드
-     * 성공 시 201 CREATED
-     * @param memberId
-     * @param postId
-     * @return
+     * 게시물에 좋아요를 생성합니다.
+     * ---
+     * 로그인한 사용자가 지정한 게시물에 좋아요를 누릅니다.
+     * 성공적으로 처리되면 HTTP 201(CREATED) 상태와 함께 좋아요 정보가 반환됩니다.
+     *
+     * @param authUser  인증된 사용자 정보
+     * @param postId    좋아요할 게시물 ID
+     * @return          생성된 좋아요 정보를 담은 DTO
      */
     @PostMapping("/api/posts/{postId}/likes")
     public ResponseEntity<LikeResponseDto> like(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
         LikeResponseDto likeResponseDto = likeService.like(
-                memberId, postId
+                authUser.getId(), postId
         );
 
         return new ResponseEntity<>(likeResponseDto,HttpStatus.CREATED);
     }
 
     /**
-     * 좋아요 취소 메소드
-     * 성공 시 200 OK
-     * @param memberId
-     * @param postId
+     * 게시물에 대한 좋아요를 취소합니다.
+     * ---
+     * 로그인한 사용자가 지정한 게시물에 누른 좋아요를 취소합니다.
+     * 성공 시 HTTP 200(OK)를 반환합니다.
+     *
+     * @param authUser  인증된 사용자 정보
+     * @param postId    좋아요를 취소할 게시물 ID
      */
     @DeleteMapping("/api/posts/{postId}/likes")
     public void unlike(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
-        likeService.unlike(memberId, postId);
+        likeService.unlike(authUser.getId(), postId);
     }
 
     /**
-     * 게시물을 좋아요 한 memberId 리스트,
-     * 게시물 좋아요 개수,
-     * 로그인한 사용자가 좋아요 했는지
-     * PostLikesResponseDto 에 넣어 반환
+     * 게시물의 좋아요 정보를 조회합니다.
+     * ---
+     * 다음 정보를 포함한 DTO를 반환합니다:
+     * - 해당 게시물을 좋아요한 사용자 ID 리스트
+     * - 좋아요 총 개수
+     * - 로그인한 사용자가 해당 게시물을 좋아요했는지 여부
      *
-     * @param memberId
-     * @param postId
-     * @return
+     * @param authUser  인증된 사용자 정보
+     * @param postId    조회할 게시물 ID
+     * @return          게시물의 좋아요 정보가 담긴 DTO
      */
     @GetMapping("/api/posts/{postId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
-            @RequestAttribute("memberId") Long memberId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
-        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(memberId, postId);
+        PostOrCommentLikesResponseDto postLikesResponseDto = likeService.findByPostId(authUser.getId(), postId);
 
         return new ResponseEntity<>(postLikesResponseDto, HttpStatus.OK);
     }
 
     /**
-     * memberId 해당 사용자가
-     * 좋아요 한 게시물 리스트 반환
-     * @param memberId
-     * @return
+     * 특정 사용자가 좋아요한 게시물 목록을 조회합니다.
+     * ---
+     * 지정한 사용자 ID 기준으로, 사용자가 좋아요한 게시물들의 리스트를 반환합니다.
+     *
+     * @param memberId  좋아요한 게시물을 조회할 사용자 ID
+     * @return          사용자가 좋아요한 게시물들의 리스트
      */
     @GetMapping("/api/members/{memberId}/likes")
     public ResponseEntity<List<LikeResponseDto>> findByMemberId(@PathVariable Long memberId){
@@ -85,5 +96,4 @@ public class PostLikeController {
 
         return new ResponseEntity<>(likeResponseDtoList, HttpStatus.OK);
     }
-
 }

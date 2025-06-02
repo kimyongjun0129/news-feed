@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.newsfeed.comment.entity.Comment;
 import org.example.newsfeed.common.entity.BaseEntity;
+import org.example.newsfeed.member.entity.Member;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,13 +29,20 @@ public class Post extends BaseEntity {
     @NotNull
     private String content;
 
-    private Long memberId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    // post : comment = 1: N 매핑 관계, post 삭제 시 동시 삭제, post 없는 comments 삭제
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
 
     public Post() {}
-    public Post(String title, String content, Long memberId){
+    public Post(String title, String content, Member member){
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
+        this.member = member;
     }
 
     public int updateTitle(String title) {
