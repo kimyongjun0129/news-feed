@@ -19,12 +19,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
-    //private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
+    /**
+     * 좋아요 생성
+     */
     public LikeResponseDto like(Long memberId, Long postId){
-        //멤버 api 추가 후 주석 제거
-        //Member member = memberRepository.findByIdOrElseThrow(memberId);
+
         Post post = postRepository.findPostByIdOrElseThrow(postId);
 
         // 본인 게시물에 좋아요 하려할 때
@@ -43,13 +44,22 @@ public class LikeService {
         return new LikeResponseDto(like.getId(), like.getMemberId(), like.getPostId());
     }
 
+    /**
+     * 좋아요 취소
+     */
     @Transactional
     public void unlike(Long memberId, Long postId){
         Like like = likeRepository.findByMemberIdAndPostIdOrElseThrow(memberId, postId);
         likeRepository.delete(like);
     }
 
+    /**
+     * 게시물 id로 좋아요 조회
+     */
     public PostOrCommentLikesResponseDto findByPostId(Long memberId, Long postId){
+
+        // 게시물이 존재하지 않을 때
+        Post post = postRepository.findPostByIdOrElseThrow(postId);
 
         List<Like> likes = likeRepository.findMemberIdByPostId(postId);
         List<Long> memberIds = likes.stream()
@@ -62,21 +72,13 @@ public class LikeService {
 
     }
 
+    /**
+     * member id로 좋아요 조회
+     */
     public List<LikeResponseDto> findByMemberId(Long memberId){
         return likeRepository.findByMemberId(memberId)
                 .stream()
                 .map(LikeResponseDto::toDto)
                 .toList();
     }
-//
-//    /**
-//     * 게시물의 좋아요 수 반환
-//     * @param postId
-//     * @return
-//     */
-//    public LikeCountResponseDto countByPostId(Long postId){
-//        return new LikeCountResponseDto(postId, likeRepository.countByPostId(postId));
-//    }
-
-
 }
