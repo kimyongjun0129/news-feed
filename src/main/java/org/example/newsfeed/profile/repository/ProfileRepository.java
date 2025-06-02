@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 public interface ProfileRepository extends JpaRepository<Member,Long> {
 
-
+//createuser
     default Member findByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Does not exist id + "+ id));
     }
