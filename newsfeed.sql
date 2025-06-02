@@ -55,7 +55,7 @@ CREATE TABLE posts_likes
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     FOREIGN KEY (member_id) REFERENCES members(id),
-    FOREIGN KEY (post_id) REFERENCES posts(id)
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments_likes
@@ -66,5 +66,5 @@ CREATE TABLE comments_likes
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at  DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     FOREIGN KEY (member_id) REFERENCES members(id),
-    FOREIGN KEY (comment_id) REFERENCES comments(id)
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
 );
