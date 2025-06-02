@@ -71,6 +71,11 @@ public class AuthService {
             throw new CustomException(CustomErrorCode.EMAIL_NOT_FOUND); // 조용히 종료하거나 무시 처리
         }
 
+        // 삭제된 멤버면 예외처리
+        if (member.isDeleted()) {
+            throw new CustomException(CustomErrorCode.DELETED_ACCOUNT);
+        }
+
         // 본인 이메일인지 확인
         if(!member.getId().equals(memberId)) {
             throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION, "본인이 아닙니다");
