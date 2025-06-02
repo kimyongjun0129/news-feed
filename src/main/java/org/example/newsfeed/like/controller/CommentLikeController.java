@@ -16,8 +16,15 @@ import org.springframework.web.bind.annotation.*;
 public class CommentLikeController {
 
     private final CommentLikeService commentLikeService;
-    private final CommentLikeRepository commentLikeRepository;
 
+    /**
+     * 좋아요 생성 메소드
+     * 성공 시 201 CREATED
+     * @param authUser
+     * @param postId
+     * @param commentId
+     * @return
+     */
     @PostMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> like(
             @AuthenticationPrincipal AuthUser authUser,
@@ -29,6 +36,12 @@ public class CommentLikeController {
         return new ResponseEntity<>(commentLikeResponseDto,HttpStatus.CREATED);
     }
 
+    /**
+     * 좋아요 취소 메소드
+     * 성공 시 200 OK
+     * @param authUser
+     * @param commentId
+     */
     @DeleteMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public void unlike(
             @AuthenticationPrincipal AuthUser authUser,
@@ -38,13 +51,12 @@ public class CommentLikeController {
     }
 
     /**
-     * commentId/likes get 매핑 시
      * 댓글을 좋아요 한 memberId 리스트,
      * 댓글 좋아요 개수,
      * 로그인한 사용자가 좋아요 했는지
      * PostOrCommentLikesResponseDto 에 넣어 반환
      *
-     * @param
+     * @param authUser
      * @param commentId
      * @return
      */
