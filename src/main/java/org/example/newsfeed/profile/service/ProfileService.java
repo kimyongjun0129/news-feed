@@ -13,19 +13,22 @@ import org.example.newsfeed.profile.dto.UpdateProfileResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.example.newsfeed.common.exception.error.CustomErrorCode.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
 
      private final MemberRepository memberRepository;
      private final PasswordEncoder passwordEncoder;
- //프로필 조회
+    //프로필 조회
     @Transactional
     public FindProfileResponseDto findProfile(Long id) {
-        Member findUser = memberRepository.findByIdOrElseThrow(id);
+        Member findUser = memberRepository.findById(id).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         return new FindProfileResponseDto(findUser.getMemberName(),findUser.getEmail(),findUser.getAge(),findUser.getNickname(), findUser.getIntro(),findUser.getMbti());
     }
-//프로필 수정
+
+    //프로필 수정
     @Transactional
     public UpdateProfileResponseDto updateProfile(Long id, UpdateProfileRequestDto requestDto) {
         //id값으로 레파지토리에서 값을 찾아오고 그 값들을 비교 만약에 id 없으면 오류 내기

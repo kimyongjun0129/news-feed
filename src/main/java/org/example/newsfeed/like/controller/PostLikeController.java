@@ -71,7 +71,7 @@ public class PostLikeController {
      * @return          게시물의 좋아요 정보가 담긴 DTO
      */
     @GetMapping("/api/posts/{postId}/likes")
-    public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
+    public ResponseEntity<PostOrCommentLikesResponseDto> findByPostId(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long postId){
 
