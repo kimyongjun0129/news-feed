@@ -20,11 +20,14 @@ public class PostLikeController {
     private final LikeService likeService;
 
     /**
-     * 좋아요 생성 메소드
-     * 성공 시 201 CREATED
-     * @param authUser
-     * @param postId
-     * @return
+     * 게시물에 좋아요를 생성합니다.
+     * ---
+     * 로그인한 사용자가 지정한 게시물에 좋아요를 누릅니다.
+     * 성공적으로 처리되면 HTTP 201(CREATED) 상태와 함께 좋아요 정보가 반환됩니다.
+     *
+     * @param authUser  인증된 사용자 정보
+     * @param postId    좋아요할 게시물 ID
+     * @return          생성된 좋아요 정보를 담은 DTO
      */
     @PostMapping("/api/posts/{postId}/likes")
     public ResponseEntity<LikeResponseDto> like(
@@ -39,10 +42,13 @@ public class PostLikeController {
     }
 
     /**
-     * 좋아요 취소 메소드
-     * 성공 시 200 OK
-     * @param authUser
-     * @param postId
+     * 게시물에 대한 좋아요를 취소합니다.
+     * ---
+     * 로그인한 사용자가 지정한 게시물에 누른 좋아요를 취소합니다.
+     * 성공 시 HTTP 200(OK)를 반환합니다.
+     *
+     * @param authUser  인증된 사용자 정보
+     * @param postId    좋아요를 취소할 게시물 ID
      */
     @DeleteMapping("/api/posts/{postId}/likes")
     public void unlike(
@@ -53,14 +59,16 @@ public class PostLikeController {
     }
 
     /**
-     * 게시물을 좋아요 한 memberId 리스트,
-     * 게시물 좋아요 개수,
-     * 로그인한 사용자가 좋아요 했는지
-     * PostLikesResponseDto 에 넣어 반환
+     * 게시물의 좋아요 정보를 조회합니다.
+     * ---
+     * 다음 정보를 포함한 DTO를 반환합니다:
+     * - 해당 게시물을 좋아요한 사용자 ID 리스트
+     * - 좋아요 총 개수
+     * - 로그인한 사용자가 해당 게시물을 좋아요했는지 여부
      *
-     * @param authUser
-     * @param postId
-     * @return
+     * @param authUser  인증된 사용자 정보
+     * @param postId    조회할 게시물 ID
+     * @return          게시물의 좋아요 정보가 담긴 DTO
      */
     @GetMapping("/api/posts/{postId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> countByPostId(
@@ -73,10 +81,12 @@ public class PostLikeController {
     }
 
     /**
-     * memberId 해당 사용자가
-     * 좋아요 한 게시물 리스트 반환
-     * @param memberId
-     * @return
+     * 특정 사용자가 좋아요한 게시물 목록을 조회합니다.
+     * ---
+     * 지정한 사용자 ID 기준으로, 사용자가 좋아요한 게시물들의 리스트를 반환합니다.
+     *
+     * @param memberId  좋아요한 게시물을 조회할 사용자 ID
+     * @return          사용자가 좋아요한 게시물들의 리스트
      */
     @GetMapping("/api/members/{memberId}/likes")
     public ResponseEntity<List<LikeResponseDto>> findByMemberId(@PathVariable Long memberId){
@@ -86,5 +96,4 @@ public class PostLikeController {
 
         return new ResponseEntity<>(likeResponseDtoList, HttpStatus.OK);
     }
-
 }
