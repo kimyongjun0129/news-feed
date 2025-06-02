@@ -51,9 +51,10 @@ public class CommentLikeController {
     @DeleteMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public void unlike(
             @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long postId,
             @PathVariable Long commentId){
 
-        commentLikeService.unlike(authUser.getId(), commentId);
+        commentLikeService.unlike(authUser.getId(), postId, commentId);
     }
 
     /**
@@ -71,9 +72,10 @@ public class CommentLikeController {
     @GetMapping("/api/posts/{postId}/comments/{commentId}/likes")
     public ResponseEntity<PostOrCommentLikesResponseDto> findByCommentId(
             @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long postId,
             @PathVariable Long commentId){
 
-        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(authUser.getId(), commentId);
+        PostOrCommentLikesResponseDto commentLikesResponseDto = commentLikeService.findByCommentId(authUser.getId(), postId, commentId);
 
         return new ResponseEntity<>(commentLikesResponseDto, HttpStatus.OK);
     }

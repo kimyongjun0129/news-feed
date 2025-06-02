@@ -7,6 +7,8 @@ import org.example.newsfeed.like.dto.LikeResponseDto;
 import org.example.newsfeed.like.dto.PostOrCommentLikesResponseDto;
 import org.example.newsfeed.like.entity.Like;
 import org.example.newsfeed.like.repository.LikeRepository;
+import org.example.newsfeed.member.entity.Member;
+import org.example.newsfeed.member.repository.MemberRepository;
 import org.example.newsfeed.post.entity.Post;
 import org.example.newsfeed.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * 좋아요 생성
@@ -49,6 +52,9 @@ public class LikeService {
      */
     @Transactional
     public void unlike(Long memberId, Long postId){
+        // 게시물이 존재하지 않을 때
+        Post post = postRepository.findPostByIdOrElseThrow(postId);
+
         Like like = likeRepository.findByMemberIdAndPostIdOrElseThrow(memberId, postId);
         likeRepository.delete(like);
     }
@@ -76,6 +82,8 @@ public class LikeService {
      * member id로 좋아요 조회
      */
     public List<LikeResponseDto> findByMemberId(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+
         return likeRepository.findByMemberId(memberId)
                 .stream()
                 .map(LikeResponseDto::toDto)
