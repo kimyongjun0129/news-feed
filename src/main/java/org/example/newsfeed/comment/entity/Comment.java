@@ -17,7 +17,6 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(length = 255)
     @NotNull
     private String content;
 
@@ -35,9 +34,5 @@ public class Comment extends BaseEntity {
         this.content = content;
         this.member = member;
         this.post = post;
-    }
-
-    public void updateContent(String content) {
-        this.content = content;
     }
 }
