@@ -58,8 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").hasRole(UserRole.ADMIN.name())
 
                         // 프로필 (profile)
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/profile").hasRole(UserRole.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/api/users/*/profile").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/members/*/profile").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/api/members/*/profile").permitAll()
 
                         // 게시물 좋아요 (PostLike)
                         .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").hasRole(UserRole.ADMIN.name())
