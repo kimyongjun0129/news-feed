@@ -4,9 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.comment.repository.CommentRepository;
+import org.example.newsfeed.comment.repository.projection.CommentCount;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.repository.LikeRepository;
+import org.example.newsfeed.like.repository.projection.PostLikeCount;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
 import org.example.newsfeed.post.dto.PostResponseDto;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +49,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPost(Long id) {
         Post post = postRepository.findPostByIdOrElseThrow(id);
-        return new PostResponseDto(post);
+
+        Long likes = likeRepository.countByPostId(id);
+        Long comments = commentRepository.countByPostId(id);
+
+        PostResponseDto responseDto = new PostResponseDto(post);
+        responseDto.setLikeCount(likes);
+        responseDto.setCommentCount(comments);
+
+        return responseDto;
     }
 
     @Override
@@ -59,24 +70,24 @@ public class PostServiceImpl implements PostService {
                 .map(Post::getId)
                 .toList();
 
-        // postId 별 좋아요 수 매핑
-        List<Object[]> likesResult = likeRepository.countLikesByPostIds(postIdList);
+        // 조회할 각 게시물의 좋아요 수 가져오기
+        List<PostLikeCount> likesResult = likeRepository.countLikesByPostIds(postIdList);
         Map<Long, Long> likesCountMap = new HashMap<>();
-        for(Object[] row : likesResult) {
-            Long postId = (Long) row[0];
-            Long likeCount = (Long) row[1];
+        for(PostLikeCount row : likesResult) {
+            Long postId = row.getPostId();
+            Long likeCount = row.getCount();
             likesCountMap.put(postId, likeCount);
         }
-        // postId 별 댓글 수 매핑
-        List<Object[]> commentsResult = commentRepository.countCommentsByPostIds(postIdList);
+        // 조회할 각 게시물의 댓글 수 가져오기
+        List<CommentCount> commentsResult = commentRepository.countCommentsByPostIds(postIdList);
         Map<Long, Long> commentCountMap = new HashMap<>();
-        for(Object[] row : commentsResult) {
-            Long postId = (Long) row[0];
-            Long commentCount = (Long) row[1];
+        for(CommentCount row : commentsResult) {
+            Long postId = row.getPostId();
+            Long commentCount = row.getCount();
             commentCountMap.put(postId, commentCount);
         }
 
-        // postId에 좋아요 수, 댓글 수 포함시켜서 response 반환
+        // Post 로 생성한 responseDto 에  좋아요, 댓글 수 포함시켜서 반환
         return postPage.map(post -> {
             PostResponseDto responseDto = new PostResponseDto(post);
             responseDto.setLikeCount(likesCountMap.getOrDefault(post.getId(), 0L));
@@ -92,11 +103,12 @@ public class PostServiceImpl implements PostService {
 
         checkPostMemberId(post, userId);
 
-        // 적합한 에러 코드 필요(아무 내용 없이 업데이트 불가)
+        // 제목, 내용 둘다 없을 때 예외처리
         if(title == null && content == null){
             throw new CustomException(CustomErrorCode.INVALID_POST_UPDATE, "제목, 내용 중 최소 하나 이상의 입력이 필요합니다.");
         }
 
+        // 변경사항 있으면 +1 하고 변경사항 반영, 없으면 0만 반환
         int update = 0;
         if(title != null){
             update += post.updateTitle(title);
@@ -110,6 +122,8 @@ public class PostServiceImpl implements PostService {
             throw new CustomException(CustomErrorCode.INVALID_POST_UPDATE, "변경사항 없이 업데이트 불가능합니다.");
         }
 
+        // 영속성 context db 로 전달 -> updatedAt 시간 최신화
+        // @Transactional 때문에 모든 작업 끝나야 update 되기 때문에 flush()없으면 이전에 가지고 있던 updatedAt 리턴
         entityManager.flush();
         return new PostResponseDto(post);
     }

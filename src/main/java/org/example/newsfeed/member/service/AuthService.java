@@ -12,6 +12,7 @@ import org.example.newsfeed.common.security.PasswordEncoder;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.entity.Member;
 import org.example.newsfeed.member.repository.MemberRepository;
+import org.example.newsfeed.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import static org.example.newsfeed.common.constant.PasswordFormatConstant.EMAIL_REGEX;
@@ -23,6 +24,7 @@ import static org.example.newsfeed.common.exception.error.CustomErrorCode.INVALI
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -67,18 +69,20 @@ public class AuthService {
             throw new CustomException(CustomErrorCode.EMAIL_NOT_FOUND); // 조용히 종료하거나 무시 처리
         }
 
-        // 본인 이메일인지 확인, 메세지 본인이 아닙니다로 바꾸기 희망
+        // 본인 이메일인지 확인
         if(!member.getId().equals(memberId)) {
-            throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION);
+            throw new CustomException(CustomErrorCode.UNAUTHORIZED_ACTION, "본인이 아닙니다");
         }
 
-        // 사용자 아이디와 비밀번호가 일치하지 않는 경우
+        // 비밀번호가 일치하지 않는 경우
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new CustomException(CustomErrorCode.INVALID_PASSWORD);
         }
 
         // 이메일 재사용 방지
+        // member 는 db 에서 삭제되지 않지만 가지고 있던 post 는 삭제
         member.delete();
+        postRepository.deleteByMemberId(memberId);
     }
 
     public LoginResponseDto login(

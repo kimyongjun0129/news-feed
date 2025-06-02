@@ -34,7 +34,8 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // post : comment = 1: N 매핑 관계, post 삭제 시 동시 삭제, post 없는 comments 삭제
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
 
     public Post() {}
