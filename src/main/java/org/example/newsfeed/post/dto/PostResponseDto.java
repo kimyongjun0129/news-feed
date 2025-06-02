@@ -21,7 +21,6 @@ public class PostResponseDto {
     @Setter
     private long commentCount;
 
-
     public PostResponseDto(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
