@@ -39,10 +39,10 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // 인증
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/logout").hasRole(UserRole.ADMIN.name())
-                        .requestMatchers("/api/auth/signup").permitAll()
-                        .requestMatchers("/api/auth/delete").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/logout").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/auth/delete").hasRole(UserRole.ADMIN.name())
 
                         // 게시물 (post)
                         .requestMatchers(HttpMethod.POST, "/api/posts").hasRole(UserRole.ADMIN.name())
