@@ -82,7 +82,7 @@ public class LikeService {
      * member id로 좋아요 조회
      */
     public List<LikeResponseDto> findByMemberId(Long memberId){
-        Member member = memberRepository.findByIdOrElseThrow(memberId);
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
         return likeRepository.findByMemberId(memberId)
                 .stream()
