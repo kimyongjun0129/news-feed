@@ -20,6 +20,7 @@ public class FollowService {
     @Transactional
     public void followUser(Long followeeId, Long followerId) {
 
+        // 팔로워 ID와 팔로이 ID가 같으면, 예외 발생
         if(followerId.equals(followeeId)) {
             throw new CustomException(CustomErrorCode.SELF_FOLLOW_NOT_ALLOWED);
         }
@@ -27,6 +28,7 @@ public class FollowService {
         Member followee = memberRepository.findMemberByIdOrElseThrow(followeeId);
         Member follower = memberRepository.findMemberByIdOrElseThrow(followerId);
 
+        // 이미 팔로잉한 유저한테, 팔로우 건 경우 예외 발생
         if(followRepository.findFollowByFolloweeAndFollower(followee, follower).isPresent()) {
             throw new CustomException(CustomErrorCode.FOLLOW_ALREADY_EXISTS);
         }
@@ -44,3 +46,4 @@ public class FollowService {
         followRepository.delete(follow);
     }
 }
+
