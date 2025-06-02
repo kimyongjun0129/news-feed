@@ -3,7 +3,6 @@ package org.example.newsfeed.like.repository;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
 import org.example.newsfeed.like.entity.CommentLike;
-import org.example.newsfeed.like.entity.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,10 +1,13 @@
 package org.example.newsfeed.member.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.common.constant.PasswordFormatConstant;
+import org.example.newsfeed.common.constant.UserRole;
 import org.example.newsfeed.common.exception.CustomException;
 import org.example.newsfeed.common.exception.error.CustomErrorCode;
+import org.example.newsfeed.common.filter.JwtUtil;
 import org.example.newsfeed.common.security.PasswordEncoder;
 import org.example.newsfeed.member.dto.*;
 import org.example.newsfeed.member.entity.Member;
@@ -21,6 +24,7 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public AuthResponseDto signup(String memberName, String email, String password, int age, String nickname, String intro, String mbti) {
         // 이메일 형식이 유효하지 않을 경우
@@ -75,13 +79,14 @@ public class AuthService {
 
         // 이메일 재사용 방지
         member.delete();
-        memberRepository.save(member);
-
-        // 실제 삭제
-        memberRepository.delete(member);
     }
 
-    public AuthResponseDto login(String email, String password) {
+    public LoginResponseDto login(
+            LoginRequestDto loginRequestDto,
+            HttpServletResponse response
+    ) {
+        String email = loginRequestDto.getEmail();
+        String password = loginRequestDto.getPassword();
 
         // 이메일 형식 검증
         if (!EMAIL_REGEX.matcher(email).matches()) {
@@ -100,6 +105,9 @@ public class AuthService {
             throw new CustomException(INVALID_PASSWORD);
         }
 
-        return new AuthResponseDto(member);
+        String token = jwtUtil.createToken(member.getId(), member.getEmail(), UserRole.ADMIN);
+        response.setHeader("Authorization", token);
+
+        return new LoginResponseDto(member.getId(), token);
     }
 }

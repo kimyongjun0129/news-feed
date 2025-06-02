@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
     private int age;
 
     @Setter
-    @Column(length = 20, nullable = false, unique = false)
+    @Column(length = 20, nullable = false)
     private String nickname;
 
     @Setter
@@ -57,6 +57,13 @@ public class Member extends BaseEntity {
         this.intro=intro;
         this.mbti=mbti;
     }
+
+    public Member(String memberName, String email, String password) {
+        this.memberName = memberName;
+        this.email = email;
+        this.password = password;
+    }
+
     public void delete() {
         this.isDeleted = true;
     }

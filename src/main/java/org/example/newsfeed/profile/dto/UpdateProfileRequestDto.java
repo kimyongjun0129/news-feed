@@ -1,16 +1,12 @@
 package org.example.newsfeed.profile.dto;
 
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
-@NoArgsConstructor
 public class UpdateProfileRequestDto {
 
-//프로필 수정
+    //프로필 수정
     private String memberName;
     private String email;
     private String nickname;
@@ -20,5 +16,4 @@ public class UpdateProfileRequestDto {
 
     private String currentPassword; // 사용자 입력 비밀번호
     private String newPassword; //새로운 비밀번호
-
 }

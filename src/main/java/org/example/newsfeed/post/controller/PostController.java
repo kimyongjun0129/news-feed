@@ -1,8 +1,8 @@
 package org.example.newsfeed.post.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.post.dto.PageDto;
 import org.example.newsfeed.post.dto.PostCreateRequestDto;
 import org.example.newsfeed.post.dto.PostResponseDto;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,12 +26,12 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
             @Valid @RequestBody PostCreateRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         PostResponseDto responseDto = postService.createPost(
                 dto.getTitle(),
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -57,13 +58,13 @@ public class PostController {
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
             @Valid @RequestBody PostUpdateRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         PostResponseDto responseDto = postService.updatePost(
                 postId,
                 dto.getTitle(),
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -71,9 +72,9 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ) {
-        postService.deletePost(postId, memberId);
+        postService.deletePost(postId, authUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

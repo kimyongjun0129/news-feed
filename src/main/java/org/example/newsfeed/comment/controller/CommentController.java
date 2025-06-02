@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeed.comment.dto.CommentRequestDto;
 import org.example.newsfeed.comment.dto.CommentResponseDto;
 import org.example.newsfeed.comment.service.CommentService;
+import org.example.newsfeed.common.dto.AuthUser;
 import org.example.newsfeed.post.dto.PageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,12 +23,12 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
             @Valid @RequestBody CommentRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         CommentResponseDto responseDto = commentService.createComment(
                 postId,
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -46,13 +48,13 @@ public class CommentController {
             @PathVariable Long postId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequestDto dto,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
         CommentResponseDto responseDto = commentService.updateComment(
                 postId,
                 commentId,
                 dto.getContent(),
-                memberId
+                authUser.getId()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -61,9 +63,9 @@ public class CommentController {
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @RequestAttribute("memberId") Long memberId
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        commentService.deleteComment(postId, commentId, memberId);
+        commentService.deleteComment(postId, commentId, authUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
