@@ -47,11 +47,28 @@ public class FollowService {
     }
 
     @Transactional
-    public void unfollowUser(Long followerId) {
+    public void unfollowUser(Long followeeId, Long unFollowerId) {
 
-        Follow follow = followRepository.findFollowByIdOrElseThrow(followerId);
+        // 본인을 언팔로우 하려는 경우, 예외 발생
+        if(unFollowerId.equals(followeeId)) {
+            throw new CustomException(SELF_UNFOLLOW_NOT_ALLOWED);
+        }
 
-        followRepository.delete(follow);
+        Optional<Member> unFollower = memberRepository.findMemberById(unFollowerId);
+
+        // 언팔로우 하려는 사용자가 없는 경우, 에외 발생
+        if (unFollower.isEmpty()) {
+            throw new CustomException(USER_NOT_FOUND);
+        }
+
+        Optional<Follow> follow = followRepository.findFollowByFollower(unFollower.get());
+
+        // 팔로인 되어있지 않는데 언팔로우 하려는 경우, 예외 발생
+        if (follow.isEmpty()) {
+            throw new CustomException(FOLLOW_NOT_FOUND);
+        }
+
+        followRepository.delete(follow.get());
     }
 }
 

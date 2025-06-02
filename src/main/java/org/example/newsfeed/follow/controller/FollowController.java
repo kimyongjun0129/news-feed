@@ -38,9 +38,10 @@ public class FollowController {
      */
     @PostMapping("/{id}/unfollow")
     public ResponseEntity<Void> unfollowUser(
-            @PathVariable("id") Long unFollowerId
+            @PathVariable("id") Long unFollowerId,
+            @AuthenticationPrincipal AuthUser authUser
     ) {
-        followService.unfollowUser(unFollowerId);
+        followService.unfollowUser(authUser.getId(), unFollowerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
