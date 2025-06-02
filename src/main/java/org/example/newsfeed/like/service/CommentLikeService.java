@@ -27,7 +27,7 @@ public class CommentLikeService {
         Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
 
         // 본인 댓글에 좋아요 하려할 때
-        if(comment.getMemberId().equals(memberId)){
+        if(comment.getMember().getId().equals(memberId)){
             throw new CustomException(CustomErrorCode.CANNOT_LIKE_OWN_COMMENT);
         }
 
