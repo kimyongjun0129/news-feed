@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
     private int age;
@@ -61,5 +62,9 @@ public class Member extends BaseEntity {
         this.memberName = memberName;
         this.email = email;
         this.password = password;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
