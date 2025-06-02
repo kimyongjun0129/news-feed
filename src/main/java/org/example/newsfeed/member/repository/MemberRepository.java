@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
     Optional<Member> findByEmail(String email);
+    Optional<Member> findByEmailAndIsDeletedFalse(String email);
+    boolean existsByEmailAndIsDeletedFalse(String email);
 
     // Member 반환, 없다면 USER_NOT_FOUND 예외 발생
     default Member findMemberByIdOrElseThrow(Long id){

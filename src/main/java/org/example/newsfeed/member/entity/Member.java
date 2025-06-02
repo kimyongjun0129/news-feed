@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
     private int age;
@@ -40,7 +41,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false,length = 20)
     private String intro;
 
-//    //엠비티아이
+    //엠비티아이
     @Setter
     @Column(length = 4)
     private String mbti;
@@ -55,5 +56,8 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.intro=intro;
         this.mbti=mbti;
+    }
+    public void delete() {
+        this.isDeleted = true;
     }
 }
