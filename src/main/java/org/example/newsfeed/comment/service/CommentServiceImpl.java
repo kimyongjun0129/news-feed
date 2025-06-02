@@ -55,11 +55,11 @@ public class CommentServiceImpl implements CommentService {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
 
-        // 최신 순으로 정렬되어 있고, 다른 정렬 기준(좋아요순)이 필요하면 RequestParam 으로 받을 수 있을 것 같다
+        // 페이지 설정(offset, size, 정렬(최신순))
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         Page<Comment> commentPage = commentRepository.findAllByPostId(pageable, postId);
 
-        // 좋아요 수 받아올 댓글 ID List
+        // 조회할 각 댓글의 좋아요 수 가져오기
         List<Long> commentIdList = commentPage.getContent().stream().map(Comment::getId).toList();
         List<CommentLikeCount> result = commentLikeRepository.countLikesByCommentIds(commentIdList);
         Map<Long, Long> likesCountMap = new HashMap<>();

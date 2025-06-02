@@ -70,7 +70,7 @@ public class PostServiceImpl implements PostService {
                 .map(Post::getId)
                 .toList();
 
-        // postId 별 좋아요 수 매핑
+        // 조회할 각 게시물의 좋아요 수 가져오기
         List<PostLikeCount> likesResult = likeRepository.countLikesByPostIds(postIdList);
         Map<Long, Long> likesCountMap = new HashMap<>();
         for(PostLikeCount row : likesResult) {
@@ -78,7 +78,7 @@ public class PostServiceImpl implements PostService {
             Long likeCount = row.getCount();
             likesCountMap.put(postId, likeCount);
         }
-        // postId 별 댓글 수 매핑
+        // 조회할 각 게시물의 댓글 수 가져오기
         List<CommentCount> commentsResult = commentRepository.countCommentsByPostIds(postIdList);
         Map<Long, Long> commentCountMap = new HashMap<>();
         for(CommentCount row : commentsResult) {
@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
             commentCountMap.put(postId, commentCount);
         }
 
-        // postId에 좋아요 수, 댓글 수 포함시켜서 response 반환
+        // Post 로 생성한 responseDto 에  좋아요, 댓글 수 포함시켜서 반환
         return postPage.map(post -> {
             PostResponseDto responseDto = new PostResponseDto(post);
             responseDto.setLikeCount(likesCountMap.getOrDefault(post.getId(), 0L));
@@ -103,11 +103,12 @@ public class PostServiceImpl implements PostService {
 
         checkPostMemberId(post, userId);
 
-        // 적합한 에러 코드 필요(아무 내용 없이 업데이트 불가)
+        // 제목, 내용 둘다 없을 때 예외처리
         if(title == null && content == null){
             throw new CustomException(CustomErrorCode.INVALID_POST_UPDATE, "제목, 내용 중 최소 하나 이상의 입력이 필요합니다.");
         }
 
+        // 변경사항 있으면 +1 하고 변경사항 반영, 없으면 0만 반환
         int update = 0;
         if(title != null){
             update += post.updateTitle(title);
