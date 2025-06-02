@@ -29,7 +29,7 @@ public class LikeService {
         Post post = postRepository.findPostByIdOrElseThrow(postId);
 
         // 본인 게시물에 좋아요 하려할 때
-        if(post.getMemberId().equals(memberId)){
+        if(post.getMember().getId().equals(memberId)){
             throw new CustomException(CustomErrorCode.CANNOT_LIKE_OWN_POST);
         }
 
